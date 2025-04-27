@@ -2,11 +2,9 @@
   description = "Example nix-darwin system flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-24.11-darwin";
-    nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    alejandra.url = "github:kamadorueda/alejandra/3.1.0";
-    alejandra.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
 
@@ -52,7 +50,6 @@
     self,
     nix-darwin,
     nixpkgs,
-    alejandra,
     nix-homebrew,
     homebrew-core,
     homebrew-cask,
@@ -81,14 +78,14 @@
         pkgs.nixd
         pkgs.ncdu
         pkgs.gh
-        alejandra.defaultPackage.aarch64-darwin
+        pkgs.alejandra
         finnerKeyboardLayout
       ];
 
       homebrew = {
         enable = true;
         onActivation = {
-          cleanup = "uninstall";
+          cleanup = "none";
           upgrade = true;
         };
         brews = [
@@ -110,14 +107,15 @@
           "qmk/qmk/qmk"
         ];
         casks = [
-          "1password"
           "1password-cli"
+          "1password"
           "alt-tab"
           "discord"
           "docker"
           "easy-move+resize"
           "flashspace"
           "font-jetbrains-mono-nerd-font"
+          "garmin-express"
           "hammerspoon"
           "hiddenbar"
           "jetbrains-toolbox"
@@ -137,13 +135,10 @@
         ];
       };
 
-      nix.nixPath = ["nixpkgs=${nixpkgs}"];
+      #nix.nixPath = ["nixpkgs=${nixpkgs}"];
 
       # Necessary for using flakes on this system.
       nix.settings.experimental-features = "nix-command flakes";
-
-      # Using determinate nix you need to disable
-      nix.enable = false;
 
       # Enable alternative shell support in nix-darwin.
       programs.fish.enable = true;
@@ -153,7 +148,7 @@
 
       # Used for backwards compatibility, please read the changelog before changing.
       # $ darwin-rebuild changelog
-      system.stateVersion = 5;
+      system.stateVersion = 6;
 
       # The platform the configuration will be used on.
       nixpkgs.hostPlatform = "aarch64-darwin";
