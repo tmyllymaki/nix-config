@@ -6,6 +6,12 @@
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
+    # Add home-manager input
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
 
     # Optional: Declarative tap management
@@ -50,6 +56,7 @@
     self,
     nix-darwin,
     nixpkgs,
+    home-manager,
     nix-homebrew,
     homebrew-core,
     homebrew-cask,
@@ -61,7 +68,15 @@
     nvf,
     ...
   }: let
+    username = "tm";
     configuration = {pkgs, ...}: {
+      users = {
+        # Create a user with the specified username
+        users."${username}" = {
+          home = "/Users/${username}";
+          name = "${username}";
+        };
+      };
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
       environment.systemPackages = [
@@ -89,22 +104,23 @@
           upgrade = true;
         };
         brews = [
-          "emacs-plus@30"
+          "jj"
           "croc"
           "dotnet"
           "elixir"
+          "emacs-plus@30"
           "exercism"
-          "python@3.13"
           "iperf3"
           "mono-libgdiplus"
           "mpv"
           "pipx"
+          "python@3.13"
+          "qmk/qmk/qmk"
           "swiftformat"
           "swiftlint"
           "xcodegen"
           "yadm"
           "zsh-vi-mode"
-          "qmk/qmk/qmk"
         ];
         casks = [
           "1password-cli"
@@ -155,17 +171,6 @@
 
       system.keyboard.enableKeyMapping = true;
       system.keyboard.remapCapsLockToEscape = true;
-
-      # Activation script to symlink the keyboard layout to the correct location
-      system.activationScripts.finnerKeyboard.text = ''
-        # Create the directory if it doesn't exist
-        mkdir -p "/Library/Keyboard Layouts"
-
-        # Symlink the keyboard layout file
-        ln -sf ${finnerKeyboardLayout}/Finner.keylayout "/Library/Keyboard Layouts/Finner.keylayout"
-
-        echo "Finner keyboard layout installed to /Library/Keyboard Layouts/"
-      '';
     };
     # Create a derivation for the Finner keyboard layout using fetchurl
     finnerKeyboardLayout = let
@@ -201,6 +206,63 @@
         configuration
         nvf.nixosModules.default
         nix-homebrew.darwinModules.nix-homebrew
+        # Add home-manager module
+        home-manager.darwinModules.home-manager
+        {
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            users."${username}" = {pkgs, ...}: {
+              # Your home-manager configuration
+              home.stateVersion = "24.11"; # Adjust accordingly
+
+              # Example configurations
+              home.packages = with pkgs; [
+                # Add user-specific packages here
+              ];
+
+              # Programs that can be managed by home-manager
+              programs.git = {
+                enable = true;
+                userName = "tmyllymaki"; # Change this to your name
+                userEmail = "tmyllymaki@fastmail.com"; # Change this to your email
+              };
+
+              # Create symbolic link for Finner keyboard layout
+              home.activation = {
+                linkFinnerKeyboardLayout = let
+                  finnerPath = "${finnerKeyboardLayout}/Finner.keylayout";
+                  targetDir = "/Library/Keyboard Layouts";
+                  targetPath = "${targetDir}/Finner.keylayout";
+                in
+                  home-manager.lib.hm.dag.entryAfter ["writeBoundary"] ''
+                    if [ ! -d "${targetDir}" ]; then
+                      echo "Creating ${targetDir} directory..."
+                      $DRY_RUN_CMD mkdir -p "${targetDir}"
+                    fi
+
+                    echo "Linking Finner keyboard layout to ${targetPath}..."
+                    if [ -L "${targetPath}" ]; then
+                      $DRY_RUN_CMD rm "${targetPath}"
+                    fi
+                    $DRY_RUN_CMD ln -sf "${finnerPath}" "${targetPath}"
+                  '';
+              };
+
+              # Fish shell configuration
+              # programs.fish = {
+              #   enable = true;
+              #   interactiveShellInit = ''
+              #     # Fish shell initialization commands here
+              #     set fish_greeting # Disable greeting
+              #   '';
+              #   plugins = [
+              #     # Fish plugins can be added here
+              #   ];
+              # };
+            };
+          };
+        }
         {
           nix-homebrew = {
             # Install Homebrew under the default prefix
