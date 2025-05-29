@@ -24,11 +24,6 @@
       flake = false;
     };
 
-    homebrew-bundle = {
-      url = "github:homebrew/homebrew-bundle";
-      flake = false;
-    };
-
     homebrew-emacs-plus = {
       url = "github:d12frosted/homebrew-emacs-plus";
       flake = false;
@@ -48,8 +43,6 @@
       url = "github:osx-cross/homebrew-arm";
       flake = false;
     };
-
-    nvf.url = "github:notashelf/nvf";
   };
 
   outputs = inputs @ {
@@ -60,15 +53,16 @@
     nix-homebrew,
     homebrew-core,
     homebrew-cask,
-    homebrew-bundle,
     homebrew-emacs-plus,
     homebrew-qmk,
     homebrew-avr,
     homebrew-arm,
-    nvf,
     ...
   }: let
     username = "tm";
+    finnerPath = "${finnerKeyboardLayout}/Finner.keylayout";
+    targetDir = "/Library/Keyboard Layouts";
+    targetPath = "${targetDir}/Finner.keylayout";
     configuration = {pkgs, ...}: {
       users = {
         # Create a user with the specified username
@@ -80,7 +74,7 @@
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
       environment.systemPackages = [
-        customNeovim.neovim
+        pkgs.neovim
         pkgs.git
         pkgs.fish
         pkgs.ripgrep
@@ -94,6 +88,7 @@
         pkgs.ncdu
         pkgs.gh
         pkgs.alejandra
+        pkgs.wget
         finnerKeyboardLayout
       ];
 
@@ -120,14 +115,18 @@
           "swiftlint"
           "xcodegen"
           "yadm"
+          "blueutil"
           "zsh-vi-mode"
         ];
         casks = [
+          "openmtp"
           "1password-cli"
           "1password"
+	  "ghostty"
           "alt-tab"
           "discord"
           "docker"
+	  "font-iosevka-ss03"
           "easy-move+resize"
           "flashspace"
           "font-jetbrains-mono-nerd-font"
@@ -143,11 +142,11 @@
           "spotify"
           "tailscale"
           "visual-studio-code"
+          "qutebrowser"
           "warp"
           "wezterm@nightly"
           "whatsapp"
           "zed"
-          "zen-browser"
         ];
       };
 
@@ -158,9 +157,12 @@
 
       # Enable alternative shell support in nix-darwin.
       programs.fish.enable = true;
+      programs.zsh.enable = true;
 
       # Set Git commit hash for darwin-version.
       system.configurationRevision = self.rev or self.dirtyRev or null;
+
+      system.primaryUser = "tm";
 
       # Used for backwards compatibility, please read the changelog before changing.
       # $ darwin-rebuild changelog
@@ -171,6 +173,25 @@
 
       system.keyboard.enableKeyMapping = true;
       system.keyboard.remapCapsLockToEscape = true;
+
+      system.activationScripts.postActivation.text = ''
+        if [ ! -d "${targetDir}" ]; then
+          echo "Creating ${targetDir} directory..."
+          $DRY_RUN_CMD mkdir -p "${targetDir}"
+        fi
+
+        # Check if the Finner keyboard layout file exists
+        if [ ! -f "${finnerPath}" ]; then
+          echo "Finner keyboard layout file not found at ${finnerPath}. Please ensure it is built correctly."
+          exit 1
+        fi
+
+        echo "Linking Finner keyboard layout to ${targetPath}..."
+        if [ -L "${targetPath}" ]; then
+          $DRY_RUN_CMD rm "${targetPath}"
+        fi
+        $DRY_RUN_CMD ln -sf "${finnerPath}" "${targetPath}"
+      '';
     };
     # Create a derivation for the Finner keyboard layout using fetchurl
     finnerKeyboardLayout = let
@@ -192,19 +213,12 @@
           cp ${finnerFile} $out/Finner.keylayout
         '';
       };
-    customNeovim = inputs.nvf.lib.neovimConfiguration {
-      pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-      modules = [./nvf-configuration.nix];
-    };
   in {
-    packages.aarch64-darwin.default = customNeovim.neovim;
-
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#Timos-MacBook-Air
     darwinConfigurations."Timos-MacBook-Air" = nix-darwin.lib.darwinSystem {
       modules = [
         configuration
-        nvf.nixosModules.default
         nix-homebrew.darwinModules.nix-homebrew
         # Add home-manager module
         home-manager.darwinModules.home-manager
@@ -230,23 +244,6 @@
 
               # Create symbolic link for Finner keyboard layout
               home.activation = {
-                linkFinnerKeyboardLayout = let
-                  finnerPath = "${finnerKeyboardLayout}/Finner.keylayout";
-                  targetDir = "/Library/Keyboard Layouts";
-                  targetPath = "${targetDir}/Finner.keylayout";
-                in
-                  home-manager.lib.hm.dag.entryAfter ["writeBoundary"] ''
-                    if [ ! -d "${targetDir}" ]; then
-                      echo "Creating ${targetDir} directory..."
-                      $DRY_RUN_CMD mkdir -p "${targetDir}"
-                    fi
-
-                    echo "Linking Finner keyboard layout to ${targetPath}..."
-                    if [ -L "${targetPath}" ]; then
-                      $DRY_RUN_CMD rm "${targetPath}"
-                    fi
-                    $DRY_RUN_CMD ln -sf "${finnerPath}" "${targetPath}"
-                  '';
               };
 
               # Fish shell configuration
@@ -277,7 +274,6 @@
             taps = {
               "homebrew/homebrew-core" = homebrew-core;
               "homebrew/homebrew-cask" = homebrew-cask;
-              "homebrew/homebrew-bundle" = homebrew-bundle;
               "d12frosted/homebrew-emacs-plus" = homebrew-emacs-plus;
               "qmk/homebrew-qmk" = homebrew-qmk;
               "osx-cross/homebrew-avr" = homebrew-avr;
@@ -291,6 +287,5 @@
 
     # Make the keyboard layout available as a package
     packages.aarch64-darwin.finnerKeyboardLayout = finnerKeyboardLayout;
-    packages.aarch64-darwin.customNeovim = customNeovim;
   };
 }
