@@ -84,11 +84,13 @@
         pkgs.zoxide
         pkgs.starship
         pkgs.pipx
+        pkgs.pipx
         pkgs.nixd
         pkgs.ncdu
         pkgs.gh
         pkgs.alejandra
         pkgs.wget
+        pkgs.pandoc
         finnerKeyboardLayout
       ];
 
@@ -99,34 +101,39 @@
           upgrade = true;
         };
         brews = [
-          "jj"
+          "blueutil"
           "croc"
           "dotnet"
           "elixir"
           "emacs-plus@30"
           "exercism"
           "iperf3"
+          "jj"
           "mono-libgdiplus"
           "mpv"
           "pipx"
           "python@3.13"
           "qmk/qmk/qmk"
+          "pandoc"
           "swiftformat"
           "swiftlint"
           "xcodegen"
           "yadm"
-          "blueutil"
           "zsh-vi-mode"
         ];
         casks = [
-          "openmtp"
+          "netnewsreader"
+          "domzilla-caffeine"
+          "rustdesk"
+          "omnidisksweeper"
+          "font-iosevka-ss03"
+          "sanesidebuttons"
+          "ghostty"
           "1password-cli"
           "1password"
-	  "ghostty"
           "alt-tab"
           "discord"
           "docker"
-	  "font-iosevka-ss03"
           "easy-move+resize"
           "flashspace"
           "font-jetbrains-mono-nerd-font"
@@ -136,13 +143,15 @@
           "jetbrains-toolbox"
           "leader-key"
           "middleclick"
+          "Mos"
+          "openmtp"
           "orbstack"
           "qmk-toolbox"
+          "qutebrowser"
           "signal"
           "spotify"
           "tailscale"
           "visual-studio-code"
-          "qutebrowser"
           "warp"
           "wezterm@nightly"
           "whatsapp"
@@ -173,6 +182,8 @@
 
       system.keyboard.enableKeyMapping = true;
       system.keyboard.remapCapsLockToEscape = true;
+
+      security.pam.services.sudo_local.touchIdAuth = true;
 
       system.activationScripts.postActivation.text = ''
         if [ ! -d "${targetDir}" ]; then
