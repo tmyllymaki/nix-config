@@ -24,11 +24,6 @@
       flake = false;
     };
 
-    homebrew-emacs-plus = {
-      url = "github:d12frosted/homebrew-emacs-plus";
-      flake = false;
-    };
-
     homebrew-qmk = {
       url = "github:qmk/homebrew-qmk";
       flake = false;
@@ -53,7 +48,6 @@
     nix-homebrew,
     homebrew-core,
     homebrew-cask,
-    homebrew-emacs-plus,
     homebrew-qmk,
     homebrew-avr,
     homebrew-arm,
@@ -97,7 +91,8 @@
       homebrew = {
         enable = true;
         onActivation = {
-          cleanup = "none";
+          cleanup = "uninstall";
+          autoUpdate = true;
           upgrade = true;
         };
         brews = [
@@ -105,16 +100,15 @@
           "croc"
           "dotnet"
           "elixir"
-          "emacs-plus@30"
           "exercism"
           "iperf3"
           "jj"
           "mono-libgdiplus"
           "mpv"
+          "pandoc"
           "pipx"
           "python@3.13"
           "qmk/qmk/qmk"
-          "pandoc"
           "swiftformat"
           "swiftlint"
           "xcodegen"
@@ -122,35 +116,37 @@
           "zsh-vi-mode"
         ];
         casks = [
-          "netnewsreader"
-          "domzilla-caffeine"
-          "rustdesk"
-          "omnidisksweeper"
-          "font-iosevka-ss03"
-          "sanesidebuttons"
-          "ghostty"
           "1password-cli"
           "1password"
           "alt-tab"
+          "betterdisplay"
           "discord"
-          "docker"
+          "domzilla-caffeine"
           "easy-move+resize"
           "flashspace"
+          "font-iosevka-ss03"
           "font-jetbrains-mono-nerd-font"
           "garmin-express"
+          "ghostty"
           "hammerspoon"
           "hiddenbar"
           "jetbrains-toolbox"
           "leader-key"
           "middleclick"
-          "Mos"
+          "mos"
+          "netnewswire"
+          "obsidian"
+          "omnidisksweeper"
           "openmtp"
           "orbstack"
+          "plex"
           "qmk-toolbox"
           "qutebrowser"
+          "rustdesk"
+          "sanesidebuttons"
           "signal"
           "spotify"
-          "tailscale"
+          "tailscale-app"
           "visual-studio-code"
           "warp"
           "wezterm@nightly"
@@ -182,6 +178,58 @@
 
       system.keyboard.enableKeyMapping = true;
       system.keyboard.remapCapsLockToEscape = true;
+
+      system.defaults.CustomUserPreferences = {
+        "com.apple.finder" = {
+          AppleShowAllFiles = true;
+          ShowStatusBar = true;
+          ShowPathbar = true;
+          ShowSidebar = true;
+          ShowExternalHardDrivesOnDesktop = true;
+          ShowHardDrivesOnDesktop = false;
+          ShowMountedServersOnDesktop = false;
+          ShowRemovableMediaOnDesktop = true;
+          _FXSortFoldersFirst = true;
+          FXPreferredViewStyle = "Nlsv"; # List view
+          FXDefaultSearchScope = "SCcf"; # Current folder
+          FXEnableExtensionChangeWarning = false;
+          DisableAllAnimations = true;
+          NewWindowTarget = "PfLo"; # Open new windows in the home directory
+          NewWindowTargetPath = "~/"; # Path to the home directory
+          AppleShowAllExtensions = true;
+          WarnOnEmptyTrash = false;
+        };
+        "com.apple.desktopservices" = {
+          DSDontWriteNetworkStores = true; # Don't create .DS_Store files on network volumes
+          DontWriteUSBStores = true; # Don't create .DS_Store files on USB volumes
+        };
+        "com.apple.dock" = {
+          autohide = true;
+          autohide-delay = 0;
+          autohide-time-modifier = 0;
+          orientation = "bottom";
+          tilesize = 36;
+          show-recents = false; # Disable recent applications in the dock
+          show-process-indicators = true; # Show indicators for running applications
+        };
+        "com.apple.activitymonitor" = {
+          OpenInMainWindow = true; # Open Activity Monitor in the main window
+          IconType = 5; # Show CPU usage in the dock icon
+          SortColumn = "CPUUsage"; # Sort by CPU usage
+          SortDirection = 0; # Sort in descending order
+        };
+        "com.apple.safari" = {
+          UniversalSearchEnabled = false; # Disable universal search
+          SuppressSearchSuggestions = true; # Disable search suggestions
+          ShowFullURLInSmartSearchField = true; # Show full URL in the address bar
+        };
+        "com.apple.SoftwareUpdate" = {
+          AutomaticCheckEnabled = true; # Enable automatic update checks
+          ScheduleFrequency = 1; # Check for updates daily
+          AutomaticDownload = true; # Automatically download updates
+          CriticalUpdateInstall = true; # Install critical updates
+        };
+      };
 
       security.pam.services.sudo_local.touchIdAuth = true;
 
@@ -285,12 +333,11 @@
             taps = {
               "homebrew/homebrew-core" = homebrew-core;
               "homebrew/homebrew-cask" = homebrew-cask;
-              "d12frosted/homebrew-emacs-plus" = homebrew-emacs-plus;
               "qmk/homebrew-qmk" = homebrew-qmk;
               "osx-cross/homebrew-avr" = homebrew-avr;
               "osx-cross/homebrew-arm" = homebrew-arm;
             };
-            mutableTaps = false;
+            mutableTaps = true;
           };
         }
       ];
