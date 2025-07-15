@@ -12,7 +12,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
 
     # Optional: Declarative tap management
     homebrew-core = {
@@ -279,6 +279,9 @@
       modules = [
         configuration
         nix-homebrew.darwinModules.nix-homebrew
+        ({config, ...}: {
+          homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
+        })
         # Add home-manager module
         home-manager.darwinModules.home-manager
         {
