@@ -38,6 +38,8 @@
       url = "github:osx-cross/homebrew-arm";
       flake = false;
     };
+
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
   outputs = inputs @ {
@@ -68,7 +70,8 @@
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
       environment.systemPackages = [
-        pkgs.neovim
+        # pkgs.neovim
+        inputs.neovim-nightly-overlay.packages.${pkgs.system}.default
         pkgs.git
         pkgs.fish
         pkgs.ripgrep
@@ -77,6 +80,7 @@
         pkgs.eza
         pkgs.zoxide
         pkgs.starship
+        pkgs.cmake
         pkgs.pipx
         pkgs.pipx
         pkgs.nixd
@@ -85,6 +89,7 @@
         pkgs.alejandra
         pkgs.wget
         pkgs.pandoc
+        pkgs.topgrade
         finnerKeyboardLayout
       ];
 
@@ -113,10 +118,12 @@
           "swiftlint"
           "xcodegen"
           "yadm"
+          "portaudio"
           "zsh-vi-mode"
         ];
         casks = [
           "1password-cli"
+          "brave-browser"
           "1password"
           "alt-tab"
           "betterdisplay"
