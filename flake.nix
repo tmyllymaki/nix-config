@@ -95,6 +95,7 @@
         pkgs.topgrade
         pkgs.wget
         pkgs.zoxide
+        pkgs.yazi
       ];
 
       homebrew = {
