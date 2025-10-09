@@ -71,26 +71,30 @@
       # $ nix-env -qaP | grep wget
       environment.systemPackages = [
         # pkgs.neovim
-        inputs.neovim-nightly-overlay.packages.${pkgs.system}.default
-        pkgs.git
-        pkgs.fish
-        pkgs.ripgrep
-        pkgs.fzf
-        pkgs.btop
-        pkgs.eza
-        pkgs.zoxide
-        pkgs.starship
-        pkgs.cmake
-        pkgs.pipx
-        pkgs.pipx
-        pkgs.nixd
-        pkgs.ncdu
-        pkgs.gh
-        pkgs.alejandra
-        pkgs.wget
-        pkgs.pandoc
-        pkgs.topgrade
         finnerKeyboardLayout
+        inputs.neovim-nightly-overlay.packages.${pkgs.system}.default
+        pkgs.alejandra
+        pkgs.atuin
+        pkgs.btop
+        pkgs.cmake
+        pkgs.eza
+        pkgs.fd
+        pkgs.fish
+        pkgs.fnm
+        pkgs.fzf
+        pkgs.gh
+        pkgs.git
+        pkgs.mise
+        pkgs.ncdu
+        pkgs.nixd
+        pkgs.pandoc
+        pkgs.pipx
+        pkgs.pipx
+        pkgs.ripgrep
+        pkgs.starship
+        pkgs.topgrade
+        pkgs.wget
+        pkgs.zoxide
       ];
 
       homebrew = {
@@ -117,17 +121,23 @@
           "swiftformat"
           "swiftlint"
           "xcodegen"
+          "xcode-build-server"
           "yadm"
           "portaudio"
+          "tree-sitter"
+          "tree-sitter-cli"
           "zsh-vi-mode"
+          "xcbeautify"
+          "ruby"
+          "coreutils"
         ];
         casks = [
           "1password-cli"
+          "container"
           "brave-browser"
           "1password"
           "alt-tab"
           "betterdisplay"
-          "discord"
           "domzilla-caffeine"
           "easy-move+resize"
           "flashspace"
@@ -154,7 +164,7 @@
           "signal"
           "spotify"
           "tailscale-app"
-          "visual-studio-code"
+          "visual-studio-code@insiders"
           "warp"
           "wezterm@nightly"
           "whatsapp"
