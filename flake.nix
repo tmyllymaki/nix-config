@@ -39,6 +39,16 @@
       flake = false;
     };
 
+    homebrew-tap-nikita = {
+      url = "github:nikitabobko/homebrew-tap";
+      flake = false;
+    };
+
+    homebrew-tap-sketchybar = {
+      url = "github:FelixKratz/homebrew-formulae";
+      flake = false;
+    };
+
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
@@ -53,6 +63,8 @@
     homebrew-qmk,
     homebrew-avr,
     homebrew-arm,
+    homebrew-tap-nikita,
+    homebrew-tap-sketchybar,
     ...
   }: let
     username = "tm";
@@ -98,6 +110,14 @@
         pkgs.yazi
       ];
 
+     fonts.packages = with pkgs; [
+	nerd-fonts.jetbrains-mono
+	nerd-fonts.hack
+	nerd-fonts.iosevka-term
+	nerd-fonts.iosevka
+	iosevka-bin
+      ];
+
       homebrew = {
         enable = true;
         onActivation = {
@@ -117,7 +137,6 @@
           "mpv"
           "pandoc"
           "pipx"
-          "python@3.13"
           "qmk/qmk/qmk"
           "swiftformat"
           "swiftlint"
@@ -131,20 +150,17 @@
           "xcbeautify"
           "ruby"
           "coreutils"
+          "sketchybar"
         ];
         casks = [
           "1password-cli"
+          "aerospace"
           "container"
-          "brave-browser"
           "1password"
           "alt-tab"
           "betterdisplay"
           "domzilla-caffeine"
-          "easy-move+resize"
-          "flashspace"
-          "font-iosevka-ss03"
-          "font-jetbrains-mono-nerd-font"
-          "garmin-express"
+          "font-hack-nerd-font"
           "ghostty"
           "hammerspoon"
           "hiddenbar"
@@ -159,14 +175,12 @@
           "orbstack"
           "plex"
           "qmk-toolbox"
-          "qutebrowser"
           "rustdesk"
           "sanesidebuttons"
           "signal"
           "spotify"
           "tailscale-app"
           "visual-studio-code@insiders"
-          "warp"
           "wezterm@nightly"
           "whatsapp"
           "zed"
@@ -195,7 +209,7 @@
       nixpkgs.hostPlatform = "aarch64-darwin";
 
       system.keyboard.enableKeyMapping = true;
-      system.keyboard.remapCapsLockToEscape = true;
+      system.keyboard.remapCapsLockToEscape = false;
 
       system.defaults.CustomUserPreferences = {
         "com.apple.finder" = {
@@ -318,8 +332,12 @@
               # Programs that can be managed by home-manager
               programs.git = {
                 enable = true;
-                userName = "tmyllymaki"; # Change this to your name
-                userEmail = "tmyllymaki@fastmail.com"; # Change this to your email
+                settings = {
+                  user = {
+                    name = "tmyllymaki";
+                    email = "tmyllymaki@fastmail.com";
+                  };
+                };
               };
 
               # Create symbolic link for Finner keyboard layout
@@ -357,6 +375,8 @@
               "qmk/homebrew-qmk" = homebrew-qmk;
               "osx-cross/homebrew-avr" = homebrew-avr;
               "osx-cross/homebrew-arm" = homebrew-arm;
+              "nikitabobko/tap" = homebrew-tap-nikita;
+              "FelixKratz/formulae" = homebrew-tap-sketchybar;
             };
             mutableTaps = true;
           };
