@@ -81,7 +81,7 @@
               id = "moveToWorkspace.8";
             }
             {
-              binding = "Control+Command+Tab";
+              binding = "Unassigned";
               id = "workspaceBackAndForth";
             }
 
@@ -103,7 +103,7 @@
               id = "focus.right";
             }
             {
-              binding = "Command+Tab";
+              binding = "Unassigned";
               id = "focusPrevious";
             }
 
