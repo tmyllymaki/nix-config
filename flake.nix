@@ -5,6 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.11";
 
     # Add home-manager input
     home-manager = {
@@ -49,6 +50,11 @@
       flake = false;
     };
 
+    homebrew-tap-siggy = {
+      url = "github:johnsideserf/homebrew-siggy";
+      flake = false;
+    };
+
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
@@ -56,6 +62,7 @@
     self,
     nix-darwin,
     nixpkgs,
+    nixpkgs-stable,
     home-manager,
     nix-homebrew,
     homebrew-core,
@@ -65,6 +72,7 @@
     homebrew-arm,
     homebrew-tap-nikita,
     homebrew-tap-sketchybar,
+    homebrew-tap-siggy,
     ...
   }: let
     username = "tm";
@@ -83,8 +91,10 @@
       # $ nix-env -qaP | grep wget
       environment.systemPackages = [
         # pkgs.neovim
+	pkgs.mpv
+	# nixpkgs-stable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.mpv
         finnerKeyboardLayout
-        inputs.neovim-nightly-overlay.packages.${pkgs.system}.default
+        inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default
         pkgs.alejandra
         pkgs.atuin
         pkgs.btop
@@ -96,18 +106,21 @@
         pkgs.fzf
         pkgs.gh
         pkgs.git
+        pkgs.iperf
+        pkgs.jujutsu
+        pkgs.mergiraf
         pkgs.mise
         pkgs.ncdu
         pkgs.nixd
         pkgs.pandoc
         pkgs.pipx
-        pkgs.pipx
         pkgs.ripgrep
         pkgs.starship
         pkgs.topgrade
         pkgs.wget
-        pkgs.zoxide
+        pkgs.yadm
         pkgs.yazi
+        pkgs.zoxide
       ];
 
      fonts.packages = with pkgs; [
@@ -122,27 +135,32 @@
         enable = true;
         onActivation = {
           cleanup = "uninstall";
-          autoUpdate = true;
-          upgrade = true;
+          autoUpdate = false;
+          upgrade = false;
         };
+taps = [
+    "homebrew/core"
+    "homebrew/cask"
+    "qmk/homebrew-qmk"
+    "osx-cross/homebrew-avr"
+    "osx-cross/homebrew-arm"
+    "nikitabobko/homebrew-tap"
+    "felixkratz/homebrew-formulae"
+    "johnsideserf/homebrew-siggy"
+  ];
         brews = [
           "blueutil"
           "croc"
           "dotnet"
           "elixir"
           "exercism"
-          "iperf3"
-          "jj"
           "mono-libgdiplus"
-          "mpv"
-          "pandoc"
           "pipx"
           "qmk/qmk/qmk"
           "swiftformat"
           "swiftlint"
           "xcodegen"
           "xcode-build-server"
-          "yadm"
           "portaudio"
           "tree-sitter"
           "tree-sitter-cli"
@@ -151,6 +169,8 @@
           "ruby"
           "coreutils"
           "sketchybar"
+	  "signal-cli"
+          "johnsideserf/siggy/siggy"
         ];
         casks = [
           "1password-cli"
@@ -311,9 +331,9 @@
       modules = [
         configuration
         nix-homebrew.darwinModules.nix-homebrew
-        ({config, ...}: {
-          homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
-        })
+        # ({config, ...}: {
+        #   homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
+        # })
         # Add home-manager module
         home-manager.darwinModules.home-manager
         {
@@ -327,6 +347,8 @@
               # Example configurations
               home.packages = with pkgs; [
                 # Add user-specific packages here
+
+		supersonic
               ];
 
               # Programs that can be managed by home-manager
@@ -338,6 +360,7 @@
                     email = "tmyllymaki@fastmail.com";
                   };
                 };
+		signing.format = null;
               };
 
               # Create symbolic link for Finner keyboard layout
@@ -370,15 +393,16 @@
             user = "tm";
 
             taps = {
-              "homebrew/homebrew-core" = homebrew-core;
-              "homebrew/homebrew-cask" = homebrew-cask;
-              "qmk/homebrew-qmk" = homebrew-qmk;
-              "osx-cross/homebrew-avr" = homebrew-avr;
-              "osx-cross/homebrew-arm" = homebrew-arm;
-              "nikitabobko/tap" = homebrew-tap-nikita;
-              "FelixKratz/formulae" = homebrew-tap-sketchybar;
+"homebrew/homebrew-core" = homebrew-core;
+  "homebrew/homebrew-cask" = homebrew-cask;
+  "qmk/homebrew-qmk" = homebrew-qmk;
+  "osx-cross/homebrew-avr" = homebrew-avr;
+  "osx-cross/homebrew-arm" = homebrew-arm;
+  "nikitabobko/homebrew-tap" = homebrew-tap-nikita;    # Changed from /tap
+  "felixkratz/homebrew-formulae" = homebrew-tap-sketchybar; # Changed from /formulae
+  "johnsideserf/homebrew-siggy" = homebrew-tap-siggy;   # Changed from /siggy
             };
-            mutableTaps = true;
+            mutableTaps = false;
           };
         }
       ];
