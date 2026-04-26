@@ -10,7 +10,7 @@
         "gamemode": "",
         "disable_hidraw": "",
         "protonfix": "",
-        "runner": "Proton-CachyOS Latest",
+        "runner": "",
         "addapp_checkbox": "",
         "addapp": "",
         "addapp_bat": "/home/tm/Games/battlenet/drive_c/Program Files (x86)/Battle.net/faugus-battlenet.bat",

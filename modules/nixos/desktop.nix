@@ -10,6 +10,15 @@
     options.custom.system.desktop.enable = lib.mkEnableOption "system.desktop";
 
     config = lib.mkIf config.custom.system.desktop.enable {
+      environment.etc = lib.mkIf (extras.zen-browser != null) {
+        "1password/custom_allowed_browsers" = {
+          text = ''
+            zen
+          '';
+          mode = "0755";
+        };
+      };
+
       boot.loader.systemd-boot.enable = true;
       boot.loader.efi.canTouchEfiVariables = true;
 
@@ -57,6 +66,7 @@
         [
           inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
           pkgs.quickshell
+          pkgs.spotify
         ]
         ++ (with pkgs; [
           swaylock
