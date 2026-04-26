@@ -1,0 +1,7 @@
+i3-wm.mod: Mod1
+i3-wm.alt: Mod4
+wm.binding.launcher.app: d
+wm.binding.display: Shift+d
+wm.binding.wifi: Shift+w
+wm.binding.browser: w
+wm.binding.sleep: none

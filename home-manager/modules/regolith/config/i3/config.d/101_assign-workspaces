@@ -1,0 +1,23 @@
+workspace "$ws1" output DisplayPort-2
+workspace "$ws2" output DisplayPort-2
+workspace "$ws3" output DisplayPort-2
+workspace "$ws4" output DisplayPort-4
+workspace "$ws5" output DisplayPort-4
+
+# Gmail
+assign [instance="crx_fmgjjmmmlfnkbppncabfkddbjimcfncm"] $ws4
+
+# Chrome
+assign [instance="google-chrome"] $ws2
+
+# Teams
+assign [instance="crx_cifhbcnohmdccbgoicgdjpfamggdegmo"] $ws3
+
+# Slack
+assign [class="Slack"] $ws3
+
+# Vmware
+assign [class="vmware"] $ws1
+
+# Rider
+assign [class="jetbrains-rider"] $ws1

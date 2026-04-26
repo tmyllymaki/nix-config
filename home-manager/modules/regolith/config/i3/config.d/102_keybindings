@@ -1,0 +1,5 @@
+# Move workspace to next monitor
+bindsym $mod+m exec i3-msg move workspace to output next
+
+## Screenshot // Selection to Clipboard // <> Shift s ##
+bindsym --release $mod+Shift+s exec "maim -s | xclip -selection clipboard -t image/png"

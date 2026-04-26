@@ -1,0 +1,2 @@
+# Disable screensaver and power saving
+exec --no-startup-id "xset s off && xset -dpms"

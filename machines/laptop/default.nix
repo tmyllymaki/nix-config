@@ -3,13 +3,11 @@
   inputs,
   mkExtras,
   ...
-}:
-let
+}: let
   machine = "laptop";
   hostname = "Timos-MacBook-Air";
   system = "aarch64-darwin";
-in
-{
+in {
   flake.darwinConfigurations.${machine} = inputs.nix-darwin.lib.darwinSystem {
     inherit system;
     specialArgs.extras = mkExtras system;
