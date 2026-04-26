@@ -239,6 +239,7 @@
 
     config = lib.mkIf config.custom.home.base.enable {
       packages = with pkgs; [
+        atuin
         bat
         eza
         fd
@@ -298,6 +299,7 @@
 
           ${pkgs.zoxide}/bin/zoxide init fish | source
           ${pkgs.direnv}/bin/direnv hook fish | source
+          ${pkgs.atuin}/bin/atuin init fish | source
 
           if test "$TERM" != dumb
             ${pkgs.starship}/bin/starship init fish | source
