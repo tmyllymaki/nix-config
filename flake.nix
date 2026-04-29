@@ -65,6 +65,12 @@
     };
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    llama-cpp.url = "github:ggerganov/llama.cpp";
+
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -96,13 +102,15 @@
         _module.args.pkgs = import inputs.nixpkgs {
           inherit system;
           config.allowUnfree = true;
+          config.cudaSupport = true;
+          overlays = [ ];
         };
       };
 
       imports = lib.flatten [
         (import-tree ./modules)
         (import-tree ./machines)
-        (import-tree ./packages)
+	(import-tree ./packages)
       ];
     };
 }

@@ -17,6 +17,9 @@ in {
         imports = [
           config.flake.nixosModules.all
         ];
+        hjem.specialArgs = {
+          inherit inputs;
+        };
         hjem.extraModules = [
           config.flake.hjemModules.all
         ];

@@ -254,6 +254,9 @@
         gh
         glow
         lsd
+	gcc
+	bun
+	nodejs
       ] ++ lib.optionals isLinux [xclip];
 
       environment.sessionVariables = {
@@ -264,11 +267,17 @@
         CARGO_NET_GIT_FETCH_WITH_CLI = "true";
         GIT_MERGE_AUTOEDIT = "no";
         NEXT_TELEMETRY_DISABLED = "1";
+        NPM_CONFIG_PREFIX = "$HOME/.npm-packages";
+        NPM_CONFIG_CACHE = "$HOME/.cache/npm";
         PATH = "$HOME/.npm-packages/bin:$PATH";
       };
 
       files =
         {
+          ".npmrc".text = ''
+            prefix=''${HOME}/.npm-packages
+            cache=''${HOME}/.cache/npm
+          '';
           ".ssh/config".text = ''
             Host *
               IdentityAgent ~/.1password/agent.sock

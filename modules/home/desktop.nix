@@ -17,6 +17,7 @@
       packages = with pkgs; [
         faugus-launcher
         umu-launcher
+	discord
       ];
 
       xdg.config.files = {

@@ -23,15 +23,30 @@
             "https://noctalia.cachix.org"
             "https://nix-community.cachix.org/"
             "https://cache.nixos.org/"
+		"https://cache.nixos-cuda.org"
           ];
           trusted-public-keys = [
             "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
             "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+"cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M=" #
           ];
+	  extra-substituters = [
+	    "https://cuda-maintainers.cachix.org"
+	  ];
+	  extra-trusted-public-keys = [
+	    "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+	  ];
         };
       };
 
       nixpkgs.config.allowAliases = false;
+
+      environment.etc."nix/nixpkgs-config.nix".text = ''
+        {
+          allowAliases = false;
+          allowUnfree = true;
+        }
+      '';
 
       programs.nh = {
         enable = true;
@@ -80,7 +95,20 @@
         unzip
         wget
         wl-clipboard
+        # inputs.llama-cpp.packages.${pkgs.stdenv.hostPlatform.system}.default
+	# inputs.llama-cpp.legacyPackages.${pkgs.stdenv.hostPlatform.system}.llamaPackagesCuda.llama-cpp
+	# (llama-cpp.override { cudaSupport = true; })
+	# llama-cpp
       ];
+
+       systemd.services.llama-cpp-server = { # If you plan to run it as a service
+         environment = {
+           LD_LIBRARY_PATH = "${pkgs.linuxPackages.nvidia_x11}/lib";
+         };
+      };
+
+      virtualisation.docker.enable = true;
+      hardware.nvidia-container-toolkit.enable = true;
 
       fonts.packages = with pkgs; [
         font-awesome

@@ -15,6 +15,7 @@
         "networkmanager"
         "audio"
         "video"
+        "docker"
       ];
       hashedPassword = "***REMOVED***";
       openssh.authorizedKeys.keys = [
@@ -30,6 +31,8 @@
         "git"
         "base"
         "desktop"
+	"atuin"
+	"llm-agents"
       ];
     };
   };
