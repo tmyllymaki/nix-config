@@ -6,6 +6,13 @@
     ...
   }: let
     desktopFiles = ../../machines/desktop/home/files;
+    toggleSounds = pkgs.runCommand "toggle-sounds" { nativeBuildInputs = [ pkgs.sox ]; } ''
+      mkdir -p $out
+      sox "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/dialog-error.oga" \
+        -b 16 "$out/mute.wav" vol 5
+      sox "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/bell.oga" \
+        -b 16 "$out/unmute.wav" vol 5
+    '';
     mkSource = path: {
       clobber = true;
       source = path;
@@ -18,7 +25,6 @@
         faugus-launcher
         umu-launcher
 	discord
-	teamspeak3
 	teamspeak6-client
       ];
 
@@ -27,7 +33,18 @@
         "faugus-launcher/games.json" = mkSource (desktopFiles + "/faugus-launcher/games.json");
         "mimeapps.list" = mkSource (desktopFiles + "/mimeapps.list");
         "niri/config.kdl" = mkSource (desktopFiles + "/niri/config.kdl");
-        "niri/toggle_mute.sh" = mkSource (desktopFiles + "/niri/toggle_mute.sh");
+        "niri/toggle_mute.sh" = {
+          clobber = true;
+          source = pkgs.writeShellScript "toggle_mute.sh" ''
+            muted=$(${pkgs.pamixer}/bin/pamixer --default-source --get-mute)
+            ${pkgs.pamixer}/bin/pamixer --default-source --toggle-mute
+            if [ "$muted" = "true" ]; then
+              pw-play "${toggleSounds}/unmute.wav" &
+            else
+              pw-play "${toggleSounds}/mute.wav" &
+            fi
+          '';
+        };
         "noctalia/colors.json" = mkSource (desktopFiles + "/noctalia/colors.json");
         "noctalia/plugins.json" = mkSource (desktopFiles + "/noctalia/plugins.json");
         "noctalia/settings.json" = mkSource (desktopFiles + "/noctalia/settings.json");

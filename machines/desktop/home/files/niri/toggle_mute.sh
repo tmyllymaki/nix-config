@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Toggle the mute state for your default microphone
 wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
