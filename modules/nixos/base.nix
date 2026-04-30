@@ -117,6 +117,7 @@
         nerd-fonts.iosevka-term
         nerd-fonts.jetbrains-mono
         iosevka-bin
+	ioskeley-mono.semiCondensed-NF
       ];
 
       security.rtkit.enable = true;

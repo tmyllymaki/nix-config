@@ -33,6 +33,13 @@
         "desktop"
 	"atuin"
 	"llm-agents"
+	"bat"
+	"dotnet"
+	"mpv"
+	"rider-config"
+	"starship"
+	"wezterm"
+	"zed"
       ];
     };
   };

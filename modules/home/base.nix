@@ -240,7 +240,6 @@
     config = lib.mkIf config.custom.home.base.enable {
       packages = with pkgs; [
         atuin
-        bat
         eza
         fd
         fish
@@ -248,7 +247,6 @@
         jujutsu
         neovim
         ripgrep
-        starship
         yazi
         zoxide
         gh

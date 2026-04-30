@@ -18,6 +18,8 @@
         faugus-launcher
         umu-launcher
 	discord
+	teamspeak3
+	teamspeak6-client
       ];
 
       xdg.config.files = {
