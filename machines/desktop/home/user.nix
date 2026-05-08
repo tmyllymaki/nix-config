@@ -40,6 +40,7 @@
 	"starship"
 	"wezterm"
 	"zed"
+	# "siggy"
       ];
     };
   };

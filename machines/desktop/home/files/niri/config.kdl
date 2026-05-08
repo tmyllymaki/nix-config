@@ -37,7 +37,7 @@ input {
 
     mouse {
 
-        accel-profile "flat"
+        // accel-profile "flat"
         // off
         // natural-scroll
         // accel-speed 0.2
@@ -678,6 +678,7 @@ window-rule {
 window-rule {
     match title="World of Warcraft"
     variable-refresh-rate true
+    open-fullscreen true
 }
 
 window-rule {

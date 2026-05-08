@@ -29,8 +29,8 @@
       ];
 
       xdg.config.files = {
-        "faugus-launcher/config.ini" = mkSource (desktopFiles + "/faugus-launcher/config.ini");
-        "faugus-launcher/games.json" = mkSource (desktopFiles + "/faugus-launcher/games.json");
+        # "faugus-launcher/config.ini" = mkSource (desktopFiles + "/faugus-launcher/config.ini");
+        # "faugus-launcher/games.json" = mkSource (desktopFiles + "/faugus-launcher/games.json");
         "mimeapps.list" = mkSource (desktopFiles + "/mimeapps.list");
         "niri/config.kdl" = mkSource (desktopFiles + "/niri/config.kdl");
         "niri/toggle_mute.sh" = {
