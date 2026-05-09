@@ -15,6 +15,7 @@
         llmPkgs.claude-code
         llmPkgs.opencode
         llmPkgs.pi
+        llmPkgs.claude-code
       ];
     };
   };

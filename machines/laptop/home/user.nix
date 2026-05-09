@@ -14,7 +14,7 @@
 
       custom.quickenable.hjem.modules = [
         "git"
-        "omniwm"
+	"llm-agents"
       ];
 
       packages = [

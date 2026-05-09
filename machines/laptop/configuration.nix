@@ -34,7 +34,7 @@
       "homebrew"
       "defaults"
       "shell"
-      "omniwm"
+      # "omniwm"
     ];
 
     # nix-homebrew declarative tap management
