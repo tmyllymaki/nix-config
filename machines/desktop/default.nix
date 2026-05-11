@@ -19,6 +19,7 @@ in {
         ];
         hjem.specialArgs = {
           inherit inputs;
+          extras = mkExtras system;
         };
         hjem.extraModules = [
           config.flake.hjemModules.all

@@ -4,7 +4,7 @@
         "title": "Battle.net",
         "path": "/home/tm/Games/battlenet/drive_c/Program Files (x86)/Battle.net/Battle.net.exe",
         "prefix": "/home/tm/Games/battlenet",
-        "launch_arguments": "WINE_SIMULATE_WRITECOPY=1 PROTON_ENABLE_WAYLAND=1 PROTON_ENABLE_DBUS=1",
+        "launch_arguments": "WINE_SIMULATE_WRITECOPY=1 PROTON_ENABLE_DBUS=1",
         "game_arguments": "",
         "mangohud": "",
         "gamemode": "",
@@ -25,7 +25,7 @@
         "lossless_present": "VSync/FIFO",
         "playtime": 2490083,
         "hidden": false,
-        "prevent_sleep": true,
+        "prevent_sleep": false,
         "favorite": false
     }
 ]

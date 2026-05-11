@@ -22,10 +22,10 @@
 
     config = lib.mkIf config.custom.home.desktop.enable {
       packages = with pkgs; [
-        faugus-launcher
         umu-launcher
 	discord
 	teamspeak6-client
+	lxqt.lxqt-policykit
       ];
 
       xdg.config.files = {

@@ -270,6 +270,7 @@ layout {
 // This line starts waybar, a commonly used bar for Wayland compositors.
 // spawn-at-startup "waybar"
 spawn-at-startup "noctalia-shell" "--no-duplicate"
+spawn-at-startup "lxqt-policykit-agent"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
@@ -314,6 +315,7 @@ workspace "games"
 window-rule {
      match title="Battle"
      open-on-workspace "games"
+     variable-refresh-rate true
 }
 
 window-rule {
@@ -677,6 +679,7 @@ window-rule {
 
 window-rule {
     match title="World of Warcraft"
+    open-on-workspace "games"
     variable-refresh-rate true
     open-fullscreen true
 }
@@ -693,6 +696,11 @@ window-rule {
     open-fullscreen true
 }
 
+window-rule {
+    match app-id="zen"
+    open-maximized-to-edges true
+}
+
 // The weird white floating window when opening Battle.net
 // window-rule {
 //     match app-id="steam_app_0"
@@ -704,5 +712,9 @@ window-rule {
 debug {
   // Allows notification actions and window activation from Noctalia.
   honor-xdg-activation-with-invalid-serial
+  // NVIDIA hardware cursor plane causes VRR flicker — use software cursor
+  disable-cursor-plane
+  // Skip redraws on cursor-only movement during VRR
+  skip-cursor-only-updates-during-vrr
 }
 

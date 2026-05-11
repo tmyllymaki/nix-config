@@ -18,9 +18,7 @@
 
       boot.resumeDevice = "/dev/disk/by-uuid/446d69d0-2ec1-4c5c-b34f-596666f8260d";
 
-      # After switching, run: sudo filefrag -v /swap/swapfile | awk 'NR==4{print $4}'
-      # Then uncomment and set the value below:
-      # boot.kernelParams = [ "resume_offset=XXXXX" ];
+      boot.kernelParams = [ "resume_offset=56368384" ];
     };
   };
 }

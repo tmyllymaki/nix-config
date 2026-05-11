@@ -3,6 +3,7 @@
     config,
     lib,
     pkgs,
+    extras,
     ...
   }: {
     options.custom.system.gaming.enable = lib.mkEnableOption "system.gaming";
@@ -24,6 +25,7 @@
         umu-launcher
         pkgs.wineWow64Packages.stagingFull
         winetricks
+        extras.mypkgs.penguin-burner
       ];
     };
   };

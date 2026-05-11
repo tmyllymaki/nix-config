@@ -50,7 +50,7 @@
         "density": "default",
         "displayMode": "always_visible",
         "enableExclusionZoneInset": true,
-        "fontScale": 1,
+        "fontScale": 0.8,
         "frameRadius": 12,
         "frameThickness": 8,
         "hideOnOverview": false,
@@ -245,6 +245,9 @@
                         "videoSource": "portal"
                     },
                     "id": "plugin:screen-recorder"
+                },
+                {
+                    "id": "plugin:latency-monitor"
                 }
             ]
         }
@@ -278,7 +281,7 @@
         "manualSunrise": "06:30",
         "manualSunset": "18:30",
         "monitorForColors": "",
-        "predefinedScheme": "Ayu",
+        "predefinedScheme": "Vesper",
         "schedulingMode": "off",
         "syncGsettings": true,
         "useWallpaperColors": false
@@ -438,7 +441,7 @@
         "passwordChars": false,
         "radiusRatio": 1,
         "reverseScroll": false,
-        "scaleRatio": 1,
+        "scaleRatio": 0.9,
         "screenRadiusRatio": 1,
         "shadowDirection": "bottom_right",
         "shadowOffsetX": 2,
@@ -658,14 +661,26 @@
     },
     "templates": {
         "activeTemplates": [
+            {
+                "enabled": true,
+                "id": "wezterm"
+            },
+            {
+                "enabled": true,
+                "id": "niri"
+            },
+            {
+                "enabled": true,
+                "id": "ghostty"
+            }
         ],
         "enableUserTheming": false
     },
     "ui": {
-        "boxBorderEnabled": false,
-        "fontDefault": "Sans Serif",
+        "boxBorderEnabled": true,
+        "fontDefault": "IoskeleyMono Nerd Font",
         "fontDefaultScale": 1,
-        "fontFixed": "monospace",
+        "fontFixed": "IoskeleyMono Nerd Font",
         "fontFixedScale": 1,
         "panelBackgroundOpacity": 0.93,
         "panelsAttachedToBar": true,
