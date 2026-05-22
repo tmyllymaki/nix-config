@@ -46,9 +46,12 @@
 
       services.greetd = {
         enable = true;
-        settings.default_session = {
-          command = "${lib.getExe pkgs.tuigreet} --remember --time --cmd ${lib.getExe' config.programs.niri.package "niri-session"}";
-          user = "greeter";
+        settings = rec {
+          initial_session = {
+            command = "${lib.getExe pkgs.tuigreet} --remember --time --cmd ${lib.getExe' config.programs.niri.package "niri-session"}";
+            user = "greeter";
+          };
+          default_session = initial_session;
         };
       };
 

@@ -1,5 +1,9 @@
 {
-  perSystem = { pkgs, lib, ... }: let
+  perSystem = {
+    pkgs,
+    lib,
+    ...
+  }: let
     # Q2RTX runtime deps — prebuilt binary needs these on LD_LIBRARY_PATH
     q2rtxLibs = with pkgs; [
       libidn2
@@ -11,14 +15,14 @@
   in {
     packages.penguin-burner = pkgs.python3Packages.buildPythonApplication rec {
       pname = "penguin-burner";
-      version = "0.1.6";
+      version = "0.1.7";
       pyproject = true;
 
       src = pkgs.fetchFromGitHub {
         owner = "jpietek";
         repo = "PenguinBurner";
         rev = "refs/tags/v${version}";
-        hash = "sha256-ccBy6jjiPPXgD3u/HW57cFdmTn1OrHa5lfMCidgIAC4=";
+        hash = "sha256-zlxybtdCIDV00Ook+yD7xspaCiVSWpTatZ7WL4vrH+s=";
       };
 
       build-system = with pkgs.python3Packages; [

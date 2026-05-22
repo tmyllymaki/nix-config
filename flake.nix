@@ -105,14 +105,14 @@
           config.permittedInsecurePackages = [
             "openssl-1.1.1w"
           ];
-          overlays = [ ];
+          overlays = [];
         };
       };
 
       imports = lib.flatten [
         (import-tree ./modules)
         (import-tree ./machines)
-	(import-tree ./packages)
+        (import-tree ./packages)
       ];
     };
 }

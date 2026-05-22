@@ -6,7 +6,7 @@
     ...
   }: let
     desktopFiles = ../../machines/desktop/home/files;
-    toggleSounds = pkgs.runCommand "toggle-sounds" { nativeBuildInputs = [ pkgs.sox ]; } ''
+    toggleSounds = pkgs.runCommand "toggle-sounds" {nativeBuildInputs = [pkgs.sox];} ''
       mkdir -p $out
       sox "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/dialog-error.oga" \
         -b 16 "$out/mute.wav" vol 5
@@ -23,9 +23,9 @@
     config = lib.mkIf config.custom.home.desktop.enable {
       packages = with pkgs; [
         umu-launcher
-	discord
-	teamspeak6-client
-	lxqt.lxqt-policykit
+        discord
+        teamspeak6-client
+        lxqt.lxqt-policykit
       ];
 
       xdg.config.files = {

@@ -1,5 +1,9 @@
 {
-  perSystem = {pkgs, lib, ...}: {
+  perSystem = {
+    pkgs,
+    lib,
+    ...
+  }: {
     packages.siggy = pkgs.rustPlatform.buildRustPackage rec {
       pname = "siggy";
       version = "1.7.1";
@@ -18,7 +22,7 @@
         homepage = "https://github.com/johnsideserf/siggy";
         license = pkgs.lib.licenses.gpl3Only;
         mainProgram = "siggy";
-        maintainers = with pkgs.lib.maintainers; [ ];
+        maintainers = with pkgs.lib.maintainers; [];
       };
     };
   };

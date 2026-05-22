@@ -88,12 +88,14 @@
         unzip
         wget
         wl-clipboard
+        nixd
       ];
 
-       systemd.services.llama-cpp-server = { # If you plan to run it as a service
-         environment = {
-           LD_LIBRARY_PATH = "${pkgs.linuxPackages.nvidia_x11}/lib";
-         };
+      systemd.services.llama-cpp-server = {
+        # If you plan to run it as a service
+        environment = {
+          LD_LIBRARY_PATH = "${pkgs.linuxPackages.nvidia_x11}/lib";
+        };
       };
 
       virtualisation.docker.enable = true;
@@ -106,7 +108,7 @@
         nerd-fonts.iosevka-term
         nerd-fonts.jetbrains-mono
         iosevka-bin
-	ioskeley-mono.semiCondensed-NF
+        ioskeley-mono.semiCondensed-NF
       ];
 
       security.rtkit.enable = true;

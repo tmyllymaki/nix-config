@@ -61,7 +61,11 @@
           else
             set -f fill_session_url "$url?$id=$id"
           end
-          ${if isLinux then "xdg-open" else "open"} "$fill_session_url"
+          ${
+          if isLinux
+          then "xdg-open"
+          else "open"
+        } "$fill_session_url"
         end
       '';
 
@@ -104,7 +108,11 @@
           if test -z "$GIT_BRANCH"
             echo "Error: not a git repository"
           else
-            ${if isLinux then "xdg-open" else "open"} "https://github.com/$PROJECT_PATH/compare/$MASTER_BRANCH...$GIT_BRANCH"
+            ${
+          if isLinux
+          then "xdg-open"
+          else "open"
+        } "https://github.com/$PROJECT_PATH/compare/$MASTER_BRANCH...$GIT_BRANCH"
           end
         end
       '';
@@ -238,24 +246,27 @@
     options.custom.home.base.enable = lib.mkEnableOption "home.base";
 
     config = lib.mkIf config.custom.home.base.enable {
-      packages = with pkgs; [
-        atuin
-        eza
-        fd
-        fish
-        fzf
-        jujutsu
-        neovim
-        ripgrep
-        yazi
-        zoxide
-        gh
-        glow
-        lsd
-	gcc
-	bun
-	nodejs
-      ] ++ lib.optionals isLinux [xclip];
+      packages = with pkgs;
+        [
+          atuin
+          eza
+          fd
+          fish
+          fzf
+          jujutsu
+          neovim
+          ripgrep
+          yazi
+          zoxide
+          gh
+          glow
+          lsd
+          gcc
+          bun
+          nodejs
+          zathura
+        ]
+        ++ lib.optionals isLinux [xclip];
 
       environment.sessionVariables = {
         BROWSER = "zen-browser";

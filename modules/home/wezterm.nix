@@ -17,7 +17,11 @@
       xdg.config.files."wezterm/wezterm.lua".text = ''
         local w = require('wezterm')
         local config = w.config_builder()
-        local os_name = '${if isLinux then "linux" else "macos"}'
+        local os_name = '${
+          if isLinux
+          then "linux"
+          else "macos"
+        }'
 
         local function is_vim(pane)
           return pane:get_user_vars().IS_NVIM == 'true'
