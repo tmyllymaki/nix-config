@@ -64,6 +64,8 @@
       flake = false;
     };
 
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
+
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     llama-cpp.url = "github:ggerganov/llama.cpp";
 

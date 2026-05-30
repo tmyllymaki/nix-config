@@ -42,6 +42,8 @@
         "zed"
         "siggy"
         "clipboard-image"
+        "easyeffects"
+        "helium"
       ];
     };
   };

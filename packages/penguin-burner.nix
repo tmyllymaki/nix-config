@@ -12,17 +12,21 @@
       openssl_1_1
       stdenv.cc.cc.lib
     ];
+    # nvidia-smi lives in the proprietary userspace portion (.bin) of the
+    # driver package; reference its store path so the systemd service gets
+    # a pure, Nix-tracked PATH (not /run/current-system)
+    nvidiaPackage = pkgs.linuxPackages.nvidia_x11.bin;
   in {
     packages.penguin-burner = pkgs.python3Packages.buildPythonApplication rec {
       pname = "penguin-burner";
-      version = "0.1.7";
+      version = "0.2.2";
       pyproject = true;
 
       src = pkgs.fetchFromGitHub {
         owner = "jpietek";
         repo = "PenguinBurner";
         rev = "refs/tags/v${version}";
-        hash = "sha256-zlxybtdCIDV00Ook+yD7xspaCiVSWpTatZ7WL4vrH+s=";
+        hash = "sha256-JzPlgK9RaVzdg2VNwJq59cW3kA8f1P4ZPWOGps1ybOE=";
       };
 
       build-system = with pkgs.python3Packages; [
@@ -46,6 +50,16 @@
         # Don't forward WAYLAND_DISPLAY — when set alongside gamescope
         # --backend headless, it breaks Q2RTX SDL Vulkan init inside gamescope.
         sed -i '/"WAYLAND_DISPLAY",/d' ui/commands.py
+
+        # Inject LD_LIBRARY_PATH and PATH into the systemd service so the
+        # daemon can find libnvidia-ml.so.1 and nvidia-smi on NixOS
+        substituteInPlace runtime_service.py \
+          --replace-fail \
+            'f"Environment=SUDO_USER={sudo_user}\n"' \
+            'f"Environment=SUDO_USER={sudo_user}\n" f"Environment=LD_LIBRARY_PATH=/run/opengl-driver/lib\n" f"Environment=PATH=${nvidiaPackage}/bin\n"'
+
+        sed -i '/f"SUDO_USER={sudo_user}",/ a\            "--setenv", "LD_LIBRARY_PATH=/run/opengl-driver/lib",' runtime_service.py
+        sed -i '/"--setenv", "LD_LIBRARY_PATH=\/run\/opengl-driver\/lib",/ a\            "--setenv", "PATH=${nvidiaPackage}/bin",' runtime_service.py
       '';
 
       makeWrapperArgs = [

@@ -46,12 +46,15 @@
 
       services.greetd = {
         enable = true;
-        settings = rec {
+        settings = {
           initial_session = {
+            command = "${lib.getExe' config.programs.niri.package "niri-session"}";
+            user = "tm";
+          };
+          default_session = {
             command = "${lib.getExe pkgs.tuigreet} --remember --time --cmd ${lib.getExe' config.programs.niri.package "niri-session"}";
             user = "greeter";
           };
-          default_session = initial_session;
         };
       };
 
@@ -70,6 +73,25 @@
           inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
           pkgs.quickshell
           pkgs.spotify
+          (pkgs.symlinkJoin {
+            name = "vivaldi";
+            paths = [pkgs.vivaldi];
+            buildInputs = [pkgs.makeWrapper];
+            postBuild = ''
+              wrapProgram $out/bin/vivaldi \
+                --add-flags "--enable-blink-features=MiddleClickAutoscroll"
+              for f in $out/share/applications/*.desktop; do
+                if [ -L "$f" ]; then
+                  target=$(readlink "$f")
+                  rm "$f"
+                  cp "$target" "$f"
+                  chmod +w "$f"
+                fi
+                substituteInPlace "$f" \
+                  --replace-fail "${pkgs.vivaldi}/bin/vivaldi" "$out/bin/vivaldi"
+              done
+            '';
+          })
         ]
         ++ (with pkgs; [
           swaylock
