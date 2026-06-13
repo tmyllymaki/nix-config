@@ -32,6 +32,7 @@
           "exercism"
           "mono-libgdiplus"
           "pipx"
+          "mole"
           "qmk/qmk/qmk"
           "swiftformat"
           "swiftlint"
