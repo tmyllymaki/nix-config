@@ -18,6 +18,7 @@
         "docker"
       ];
       hashedPassword = "***REMOVED***";
+      linger = true;
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICmTIzff+A0lJ0AlmZ8HOXPZAA4bPKYHI7Rowi2PYOgV tm"
       ];
@@ -31,6 +32,7 @@
         "git"
         "base"
         "desktop"
+        "plasma"
         "atuin"
         "llm-agents"
         "bat"
@@ -44,6 +46,7 @@
         "clipboard-image"
         "easyeffects"
         "helium"
+        "rustdesk"
       ];
     };
   };

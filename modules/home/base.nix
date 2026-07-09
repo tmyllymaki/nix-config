@@ -255,6 +255,7 @@
           fzf
           jujutsu
           neovim
+          tree-sitter
           ripgrep
           yazi
           zoxide

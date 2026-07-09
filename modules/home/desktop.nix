@@ -25,6 +25,7 @@
         umu-launcher
         discord
         teamspeak6-client
+        teamspeak3
         lxqt.lxqt-policykit
       ];
 

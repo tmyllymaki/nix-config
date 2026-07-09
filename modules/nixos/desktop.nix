@@ -34,17 +34,31 @@
         powerManagement.finegrained = false;
         open = true;
         nvidiaSettings = true;
-        package = config.boot.kernelPackages.nvidiaPackages.stable;
+        # package = config.boot.kernelPackages.nvidiaPackages.stable;
+        package = config.boot.kernelPackages.nvidiaPackages.latest;
       };
 
       programs.dconf.enable = true;
       programs.niri.enable = true;
       programs.xwayland.enable = true;
 
+      # Keyboard: Finner layout + Caps Lock as Escape
+      services.xserver.xkb = {
+        extraLayouts.finner = {
+          description = "Finnish with US improvements (Finner)";
+          languages = ["eng" "fin"];
+          symbolsFile = ../../machines/desktop/home/files/xkb/symbols/finner;
+        };
+        layout = "finner";
+        variant = "custom";
+        options = "caps:escape";
+      };
+
       security.pam.services.swaylock = {};
       services.gnome.gnome-keyring.enable = true;
 
-      services.greetd = {
+      # Use greetd when Plasma is not enabled; SDDM takes over when Plasma is active.
+      services.greetd = lib.mkIf (!config.custom.system.plasma.enable) {
         enable = true;
         settings = {
           initial_session = {

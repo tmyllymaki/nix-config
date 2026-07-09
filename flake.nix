@@ -73,11 +73,14 @@
       url = "github:numtide/llm-agents.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    ts3-noweb.url = "github:Jokler/ts3client-noweb-nix";
   };
 
   outputs = inputs @ {
     self,
     flake-parts,
+    ts3-noweb,
     ...
   }: let
     inherit (inputs.nixpkgs) lib;

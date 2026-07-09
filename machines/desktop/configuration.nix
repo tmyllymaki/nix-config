@@ -8,6 +8,7 @@
     nixpkgs.hostPlatform = "x86_64-linux";
 
     nixpkgs.overlays = [
+      inputs.ts3-noweb.overlays.default
       (final: prev: {
         _1password-gui = prev._1password-gui.overrideAttrs (oldAttrs: {
           src = final.fetchurl {
@@ -27,6 +28,10 @@
       "desktop"
       "gaming"
       "hibernate"
+      "nfs"
+      "rclone"
+      "plasma"
+      "velocity-bridge"
     ];
   };
 }

@@ -41,10 +41,11 @@
     options = ["subvol=@log" "compress=zstd"];
   };
 
-  fileSystems."/boot" = {
-    device = "/dev/nvme0n1p4";
-    fsType = "vfat";
-  };
+  fileSystems."/boot" =
+    { device = "/dev/disk/by-uuid/4E5B-D0D8";
+      fsType = "vfat";
+      options = [ "fmask=0022" "dmask=0022" ];
+    };
 
   swapDevices = [];
 
