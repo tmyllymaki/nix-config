@@ -52,6 +52,18 @@
         "felixkratz/homebrew-formulae" = inputs.homebrew-tap-sketchybar;
         "johnsideserf/homebrew-siggy" = inputs.homebrew-tap-siggy;
       };
+      trust = {
+        taps = [
+          "homebrew/homebrew-core"
+          "homebrew/homebrew-cask"
+          "qmk/homebrew-qmk"
+          "osx-cross/homebrew-avr"
+          "osx-cross/homebrew-arm"
+          "nikitabobko/homebrew-tap"
+          "felixkratz/homebrew-formulae"
+          "johnsideserf/homebrew-siggy"
+        ];
+      };
       mutableTaps = false;
     };
   };

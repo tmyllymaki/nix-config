@@ -47,6 +47,7 @@
           "coreutils"
           "sketchybar"
           "signal-cli"
+          "herdr"
           "johnsideserf/siggy/siggy"
         ];
         casks = [
