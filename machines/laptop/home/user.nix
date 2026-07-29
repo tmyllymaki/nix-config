@@ -17,6 +17,7 @@
         "mpv"
         "llm-agents"
         "raycast"
+        "hammerspoon"
       ];
 
       packages = [
