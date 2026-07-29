@@ -1,10 +1,13 @@
 {
+  # NOTE: doom uses individual file symlinks instead of a directory symlink
+  # because doom's package manager (straight.el) writes to .config/doom/ at
+  # runtime. A directory symlink would point to the read-only nix store.
   flake.hjemModules.doom = {
     config,
     lib,
     ...
   }: let
-    dir = ../../dotfiles/.config/doom;
+    dir = ../../dotfiles/doom;
     mkSource = path: {
       clobber = true;
       source = dir + "/${path}";

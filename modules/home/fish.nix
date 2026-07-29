@@ -1,4 +1,8 @@
 {
+  # NOTE: fish uses individual file symlinks instead of a directory symlink
+  # because fisher (plugin manager) writes to functions/, completions/, and
+  # conf.d/ at runtime. A directory symlink would point to the read-only nix
+  # store, breaking fisher.
   flake.hjemModules.fish = {
     config,
     lib,

@@ -11,9 +11,9 @@
         extras.mypkgs.hammerspoon
       ];
 
-      files.".hammerspoon/init.lua" = {
+      files.".hammerspoon" = {
         clobber = true;
-        source = ../../dotfiles/.hammerspoon/init.lua;
+        source = ../../dotfiles/.hammerspoon;
       };
     };
   };
