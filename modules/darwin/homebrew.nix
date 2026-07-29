@@ -23,11 +23,11 @@
           "nikitabobko/homebrew-tap"
           "felixkratz/homebrew-formulae"
           "johnsideserf/homebrew-siggy"
+          "junian/homebrew-dotnet"
         ];
         brews = [
           "blueutil"
           "croc"
-          "dotnet"
           "elixir"
           "exercism"
           "mono-libgdiplus"
@@ -51,6 +51,7 @@
           "johnsideserf/siggy/siggy"
         ];
         casks = [
+          "dotnet-sdk@10.0"
           "1password"
           "1password-cli"
           "aerospace"

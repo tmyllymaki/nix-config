@@ -29,7 +29,6 @@
           jujutsu
           mergiraf
           mise
-          mpv
           ncdu
           nixd
           pandoc

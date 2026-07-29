@@ -3,6 +3,19 @@
     nixpkgs.config.allowUnfree = true;
     nixpkgs.hostPlatform = "aarch64-darwin";
 
+    nixpkgs.overlays = [
+      (final: prev: {
+        mpv-unwrapped = prev.mpv-unwrapped.overrideAttrs (old: {
+          nativeBuildInputs = old.nativeBuildInputs ++ [final.llvmPackages.lld];
+          preConfigure =
+            (old.preConfigure or "")
+            + ''
+              export LDFLAGS="-fuse-ld=lld $LDFLAGS"
+            '';
+        });
+      })
+    ];
+
     system.stateVersion = 6;
     system.primaryUser = "tm";
     system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
@@ -51,6 +64,7 @@
         "nikitabobko/homebrew-tap" = inputs.homebrew-tap-nikita;
         "felixkratz/homebrew-formulae" = inputs.homebrew-tap-sketchybar;
         "johnsideserf/homebrew-siggy" = inputs.homebrew-tap-siggy;
+        "junian/homebrew-dotnet" = inputs.homebrew-tap-dotnet;
       };
       trust = {
         taps = [
@@ -62,6 +76,7 @@
           "nikitabobko/homebrew-tap"
           "felixkratz/homebrew-formulae"
           "johnsideserf/homebrew-siggy"
+          "junian/homebrew-dotnet"
         ];
       };
       mutableTaps = false;

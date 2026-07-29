@@ -14,11 +14,13 @@
 
       custom.quickenable.hjem.modules = [
         "git"
-	"llm-agents"
+        "mpv"
+        "llm-agents"
+        "raycast"
       ];
 
       packages = [
-        pkgs.supersonic
+        # pkgs.supersonic broken atm
       ];
     };
   };

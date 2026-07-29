@@ -63,6 +63,10 @@
       url = "github:johnsideserf/homebrew-siggy";
       flake = false;
     };
+    homebrew-tap-dotnet = {
+      url = "github:junian/homebrew-dotnet";
+      flake = false;
+    };
 
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 
