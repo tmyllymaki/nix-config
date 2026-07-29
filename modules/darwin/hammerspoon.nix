@@ -10,6 +10,11 @@
       packages = [
         extras.mypkgs.hammerspoon
       ];
+
+      files.".hammerspoon/init.lua" = {
+        clobber = true;
+        source = ../../dotfiles/.hammerspoon/init.lua;
+      };
     };
   };
 }

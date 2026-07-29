@@ -1,0 +1,8 @@
+[tools]
+fnox = "latest"
+go = "1.23.12"
+node = "22.20.0"
+watchexec = "latest"
+
+[settings]
+experimental = true

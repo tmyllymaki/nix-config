@@ -18,6 +18,15 @@
         "llm-agents"
         "raycast"
         "hammerspoon"
+        "wezterm"
+        "doom"
+        "aerospace"
+        "flashspace"
+        "sketchybar"
+        "ideavim"
+        "fish"
+        "ghostty"
+        "bat"
       ];
 
       packages = [

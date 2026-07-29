@@ -47,6 +47,12 @@
         "easyeffects"
         "helium"
         "rustdesk"
+        "fish"
+        "ghostty"
+        "zellij"
+        "mise"
+        "doom"
+        "ideavim"
       ];
     };
   };

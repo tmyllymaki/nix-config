@@ -1,0 +1,51 @@
+command = /run/current-system/sw/bin/fish
+
+background-opacity = 1.00
+background-blur-radius = 20
+macos-non-native-fullscreen = visible-menu
+mouse-hide-while-typing = true
+
+# Empty values reset the configuration to the default value
+font-family = "Iosevka Term SS03"
+# font-family = "Monaspace Neon"
+# font-family-bold = "Monaspace Xenon"
+# font-family-italic = "Monaspace Neon"
+# font-family-bold-italic = "Monaspace Krypton"
+# The following are optional settings for more balanced font weight
+font-style = "Medium"
+font-style-bold = "Italic"
+font-style-italic= "Italic"
+font-style-bold-italic = "Regular"
+font-feature = "+calt, +dlig, +ss03" # Iosevka Term SS03
+# font-feature = "+calt, +liga, +ss01, +ss02, +ss03, +ss04, +ss05, +ss06, +ss07, +ss08, +ss09" # Monaspace
+font-size = 14
+
+adjust-cell-height = 10%
+
+# mouse-scroll-multiplier = 0.5
+
+# window-decoration = false
+# window-padding-x = 8
+# window-padding-y = 8
+
+#theme = catppuccin-mocha
+#theme = dark:modus_vivendi,light:modus_operandi
+#font-feature = -liga
+
+# Unbind CMD+... keys so they will be forwarded to Zellij
+# keybind = cmd+t=unbind
+# keybind = cmd+n=unbind
+# keybind = cmd+c=unbind
+# keybind = cmd+w=unbind
+# keybind = cmd+d=unbind
+# keybind = cmd+opt+left=unbind
+# keybind = cmd+opt+right=unbind
+
+# Make ctrl + tab to switch to the next tab
+# keybind = ctrl+tab=text:\x1b[9;5u
+# keybind = ctrl+shift+tab=text:\x1b[1;5Z
+
+# macos-option-as-alt = left
+
+# keybind = alt+left=unbind
+# keybind = alt+right=unbind

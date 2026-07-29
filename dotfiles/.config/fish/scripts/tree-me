@@ -1,0 +1,242 @@
+#!/bin/bash
+# Minimal git worktree helper - leverages git's native capabilities
+# Usage: tree-me <command> [options]
+#
+# For fish shell integration, see:
+#   ~/.config/fish/functions/tree-me.fish
+#   ~/.config/fish/completions/tree-me.fish
+
+set -e
+
+# Worktree organization: ~/dev/worktrees/<repo>/<branch>
+WORKTREE_ROOT="${WORKTREE_ROOT:-$HOME/dev/worktrees}"
+
+# Show help if no arguments
+show_help() {
+    cat << 'EOF'
+Usage: tree-me <command> [options]
+
+Git-like worktree management with organized directory structure.
+
+Commands:
+  checkout, co <branch>         Checkout existing branch in new worktree
+  create <branch> [base]        Create new branch in worktree (default: main/master)
+  pr <number|url>               Checkout GitHub PR in worktree (uses gh)
+  cd                            Fuzzy-select a worktree to cd into (uses fzf)
+  list, ls                      List all worktrees
+  remove, rm <branch>           Remove a worktree
+  prune                         Remove worktree administrative files
+
+Examples:
+  tree-me checkout feature-branch
+  tree-me create my-feature
+  tree-me create my-feature develop
+  tree-me pr 123
+  tree-me pr https://github.com/org/repo/pull/123
+  tree-me cd
+  tree-me list
+  tree-me remove old-branch
+  tree-me prune
+
+Worktrees are organized at: $WORKTREE_ROOT/<repo>/<branch>
+Set WORKTREE_ROOT to customize the location (default: ~/dev/worktrees)
+
+Zoxide integration: Worktree paths are added to zoxide when created (if installed)
+EOF
+}
+
+if [ $# -eq 0 ]; then
+    show_help
+    exit 0
+fi
+
+# Get repo name from git
+get_repo_name() {
+    basename "$(git remote get-url origin 2>/dev/null || git rev-parse --show-toplevel)" .git
+}
+
+# Get default base branch
+get_default_base() {
+    git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo main
+}
+
+# Add path to zoxide if available
+add_to_zoxide() {
+    local path="$1"
+    if command -v zoxide >/dev/null 2>&1; then
+        zoxide add "$path" 2>/dev/null || true
+    fi
+}
+
+# Extract PR number from URL or number
+get_pr_number() {
+    local input="$1"
+    if [[ "$input" =~ ^https://github.com/.*/pull/([0-9]+) ]]; then
+        echo "${BASH_REMATCH[1]}"
+    elif [[ "$input" =~ ^[0-9]+$ ]]; then
+        echo "$input"
+    else
+        echo "Error: Invalid PR number or URL: $input" >&2
+        exit 1
+    fi
+}
+
+repo=$(get_repo_name)
+command="$1"
+shift
+
+case "$command" in
+    checkout|co)
+        branch="${1:?Branch name required. Usage: tree-me checkout <branch>}"
+        path="$WORKTREE_ROOT/$repo/$branch"
+
+        # Check if worktree already exists
+        if git worktree list | grep -q "\[$branch\]"; then
+            existing=$(git worktree list | grep "\[$branch\]" | awk '{print $1}')
+            echo "✓ Worktree already exists: $existing"
+            echo "TREE_ME_CD:$existing"
+            exit 0
+        fi
+
+        # Check if branch exists
+        if git show-ref --verify --quiet "refs/heads/$branch" || \
+           git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+            git worktree add "$path" "$branch"
+            add_to_zoxide "$path"
+            echo "✓ Worktree created at: $path"
+            echo "TREE_ME_CD:$path"
+        else
+            echo "Error: Branch '$branch' does not exist" >&2
+            echo "Use 'tree-me create $branch' to create a new branch" >&2
+            exit 1
+        fi
+        ;;
+
+    create)
+        branch="${1:?Branch name required. Usage: tree-me create <branch> [base-branch]}"
+        base="${2:-$(get_default_base)}"
+        path="$WORKTREE_ROOT/$repo/$branch"
+
+        # Check if worktree already exists
+        if git worktree list | grep -q "\[$branch\]"; then
+            existing=$(git worktree list | grep "\[$branch\]" | awk '{print $1}')
+            echo "✓ Worktree already exists: $existing"
+            echo "TREE_ME_CD:$existing"
+            exit 0
+        fi
+
+        # Create new branch
+        git worktree add "$path" -b "$branch" "$base"
+        add_to_zoxide "$path"
+        echo "✓ Worktree created at: $path"
+        echo "TREE_ME_CD:$path"
+        ;;
+
+    pr)
+        input="${1:?PR number or URL required. Usage: tree-me pr <number|url>}"
+        pr_number=$(get_pr_number "$input")
+
+        # Check if gh is installed
+        if ! command -v gh >/dev/null 2>&1; then
+            echo "Error: 'gh' CLI not found. Install it from https://cli.github.com" >&2
+            exit 1
+        fi
+
+        # Use gh to checkout PR in a worktree
+        branch="pr-$pr_number"
+        path="$WORKTREE_ROOT/$repo/$branch"
+
+        # Check if worktree already exists
+        if git worktree list | grep -q "\[$branch\]"; then
+            existing=$(git worktree list | grep "\[$branch\]" | awk '{print $1}')
+            echo "✓ Worktree already exists: $existing"
+            echo "TREE_ME_CD:$existing"
+            exit 0
+        fi
+
+        # Fetch the PR and create worktree
+        git fetch origin "pull/$pr_number/head:$branch" 2>/dev/null || true
+        git worktree add "$path" "$branch"
+        add_to_zoxide "$path"
+        echo "✓ PR #$pr_number checked out at: $path"
+        echo "TREE_ME_CD:$path"
+        ;;
+
+    cd)
+        # Check if fzf is installed
+        if ! command -v fzf >/dev/null 2>&1; then
+            echo "Error: 'fzf' not found. Install it with: brew install fzf" >&2
+            exit 1
+        fi
+
+        # Get worktree list and format for better fzf searching
+        # Format: branch  path  commit
+        worktrees=$(git worktree list 2>/dev/null | awk '{
+            path = $1
+            commit = $2
+            # Extract branch from brackets [branch]
+            branch = ""
+            for (i=3; i<=NF; i++) {
+                if ($i ~ /^\[.*\]$/) {
+                    branch = substr($i, 2, length($i)-2)
+                }
+            }
+            # For detached HEAD or bare, use directory name from path
+            if (branch == "") {
+                n = split(path, parts, "/")
+                branch = parts[n]
+            }
+            printf "%-30s %s %s\n", branch, path, commit
+        }')
+
+        if [ -z "$worktrees" ]; then
+            echo "No worktrees found" >&2
+            exit 1
+        fi
+
+        # Use --nth=1 to search only branch name, --tiebreak=length prefers shorter matches
+        selected=$(echo "$worktrees" | fzf --height=40% --reverse \
+            --prompt="Select worktree: " \
+            --nth=1 \
+            --tiebreak=length,begin \
+            --preview-window=hidden)
+
+        if [ -z "$selected" ]; then
+            exit 0  # User cancelled
+        fi
+
+        # Extract path (second column in our formatted output)
+        path=$(echo "$selected" | awk '{print $2}')
+        echo "TREE_ME_CD:$path"
+        ;;
+
+    list|ls)
+        git worktree list
+        ;;
+
+    remove|rm)
+        branch="${1:?Branch name required. Usage: tree-me remove <branch>}"
+        existing=$(git worktree list | grep "\[$branch\]" | awk '{print $1}')
+        if [ -z "$existing" ]; then
+            echo "Error: No worktree found for branch: $branch" >&2
+            exit 1
+        fi
+        git worktree remove "$existing"
+        echo "✓ Removed worktree: $existing"
+        ;;
+
+    prune)
+        git worktree prune
+        echo "✓ Pruned stale worktree administrative files"
+        ;;
+
+    help|--help|-h)
+        show_help
+        ;;
+
+    *)
+        echo "Error: Unknown command '$command'" >&2
+        echo "Run 'tree-me help' for usage information" >&2
+        exit 1
+        ;;
+esac

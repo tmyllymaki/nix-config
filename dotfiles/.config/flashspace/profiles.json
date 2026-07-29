@@ -1,0 +1,205 @@
+{
+  "profiles" : [
+    {
+      "id" : "07D2B587-2A63-4D3C-83F0-6107F14CD57C",
+      "name" : "Default",
+      "workspaces" : [
+        {
+          "apps" : [
+            {
+              "bundleIdentifier" : "com.github.wez.wezterm",
+              "iconPath" : "/Applications/WezTerm.app/Contents/Resources/terminal.icns",
+              "name" : "WezTerm"
+            },
+            {
+              "bundleIdentifier" : "org.chromium.Chromium",
+              "iconPath" : "/Users/timomyllymaki/Library/Caches/ms-playwright/chromium-1155/chrome-mac/Chromium.app/Contents/Resources/app.icns",
+              "name" : "Chromium"
+            },
+            {
+              "bundleIdentifier" : "com.jetbrains.cwm.guest-EAP",
+              "iconPath" : "/Users/timomyllymaki/Library/Caches/JetBrains/JetBrainsClientDist/JetBrainsClient-251.22821.85-aarch64.sit-e5c6574173.ide.d/JetBrains Rider 2025.1 EAP.app/Contents/Resources/jetbrains_client.icns",
+              "name" : "JetBrains Rider-EAP"
+            },
+            {
+              "bundleIdentifier" : "com.microsoft.rdc.macos",
+              "iconPath" : "/Applications/Windows App.app/Contents/Resources/AppIcon.icns",
+              "name" : "Windows App"
+            },
+            {
+              "bundleIdentifier" : "com.azuredatastudio.oss",
+              "iconPath" : "/Applications/Azure Data Studio.app/Contents/Resources/Azure Data Studio.icns",
+              "name" : "Azure Data Studio"
+            },
+            {
+              "bundleIdentifier" : "com.microsoft.VSCode",
+              "iconPath" : "/Applications/Visual Studio Code.app/Contents/Resources/Code.icns",
+              "name" : "Code"
+            },
+            {
+              "bundleIdentifier" : "org.gnu.Emacs",
+              "iconPath" : "/opt/homebrew/Cellar/emacs-plus@30/30.1/Emacs.app/Contents/Resources/Emacs.icns",
+              "name" : "Emacs"
+            },
+            {
+              "bundleIdentifier" : "com.usebruno.app",
+              "iconPath" : "/Applications/Bruno.app/Contents/Resources/icon.icns",
+              "name" : "Bruno"
+            },
+            {
+              "bundleIdentifier" : "dev.zed.Zed",
+              "iconPath" : "/Applications/Zed.app/Contents/Resources/Zed.icns",
+              "name" : "Zed"
+            },
+            {
+              "bundleIdentifier" : "com.jetbrains.rider",
+              "iconPath" : "/Users/timomyllymaki/Applications/Rider.app/Contents/Resources/rider.icns",
+              "name" : "JetBrains Rider"
+            },
+            {
+              "bundleIdentifier" : "com.mitchellh.ghostty",
+              "iconPath" : "/Applications/Ghostty.app/Contents/Resources/Ghostty.icns",
+              "name" : "Ghostty"
+            }
+          ],
+          "assignAppShortcut" : "cmd+shift+1",
+          "display" : "M28U",
+          "id" : "3D1D33AD-1B72-4323-B8EE-B3E153584534",
+          "name" : "Editor",
+          "shortcut" : "cmd+1",
+          "symbolIconName" : "1.circle"
+        },
+        {
+          "apps" : [
+            {
+              "bundleIdentifier" : "jan.ai.app",
+              "iconPath" : "/Applications/Jan.app/Contents/Resources/icon.icns",
+              "name" : "Jan"
+            },
+            {
+              "bundleIdentifier" : "com.google.Chrome",
+              "iconPath" : "/Applications/Google Chrome.app/Contents/Resources/app.icns",
+              "name" : "Google Chrome"
+            },
+            {
+              "bundleIdentifier" : "org.mozilla.firefox",
+              "iconPath" : "/Applications/Firefox.app/Contents/Resources/firefox.icns",
+              "name" : "Firefox"
+            },
+            {
+              "bundleIdentifier" : "com.microsoft.StorageExplorer",
+              "iconPath" : "/Applications/Microsoft Azure Storage Explorer.app/Contents/Resources/electron.icns",
+              "name" : "Microsoft Azure Storage Explorer"
+            },
+            {
+              "bundleIdentifier" : "com.apple.Safari",
+              "iconPath" : "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/Contents/Resources/AppIcon.icns",
+              "name" : "Safari"
+            },
+            {
+              "bundleIdentifier" : "com.1password.1password",
+              "iconPath" : "/Applications/1Password.app/Contents/Resources/icon.icns",
+              "name" : "1Password"
+            },
+            {
+              "bundleIdentifier" : "com.ranchero.NetNewsWire-Evergreen",
+              "iconPath" : "/Applications/NetNewsWire.app/Contents/Resources/AppIcon.icns",
+              "name" : "NetNewsWire"
+            },
+            {
+              "bundleIdentifier" : "company.thebrowser.Browser",
+              "iconPath" : "/Applications/Arc.app/Contents/Resources/AppIcon.icns",
+              "name" : "Arc"
+            },
+            {
+              "bundleIdentifier" : "com.microsoft.Excel",
+              "iconPath" : "/Applications/Microsoft Excel.app/Contents/Resources/XCEL.icns",
+              "name" : "Microsoft Excel"
+            },
+            {
+              "bundleIdentifier" : "app.zen-browser.zen",
+              "iconPath" : "/Applications/Zen Browser.app/Contents/Resources/firefox.icns",
+              "name" : "Zen"
+            }
+          ],
+          "assignAppShortcut" : "cmd+shift+2",
+          "display" : "M28U",
+          "id" : "590B0455-8E5A-46F0-84F4-8109DAA932CC",
+          "name" : "Browser",
+          "shortcut" : "cmd+2",
+          "symbolIconName" : "2.circle"
+        },
+        {
+          "apps" : [
+            {
+              "bundleIdentifier" : "org.whispersystems.signal-desktop",
+              "iconPath" : "/Applications/Signal.app/Contents/Resources/icon.icns",
+              "name" : "Signal"
+            },
+            {
+              "bundleIdentifier" : "com.tinyspeck.slackmacgap",
+              "iconPath" : "/Applications/Slack.app/Contents/Resources/electron.icns",
+              "name" : "Slack"
+            },
+            {
+              "bundleIdentifier" : "net.whatsapp.WhatsApp",
+              "iconPath" : "/Applications/WhatsApp.app/Contents/Resources/AppIconCatalystRelease.icns",
+              "name" : "‎WhatsApp"
+            },
+            {
+              "bundleIdentifier" : "com.microsoft.teams2",
+              "iconPath" : "/Applications/Microsoft Teams.app/Contents/Resources/AppIcon.icns",
+              "name" : "Microsoft Teams"
+            }
+          ],
+          "assignAppShortcut" : "cmd+shift+3",
+          "display" : "M28U",
+          "id" : "670E3205-68A0-4FCF-B083-C643B73D4775",
+          "name" : "Chats",
+          "shortcut" : "cmd+3",
+          "symbolIconName" : "3.circle"
+        },
+        {
+          "apps" : [
+            {
+              "bundleIdentifier" : "com.apple.Music",
+              "iconPath" : "/System/Applications/Music.app/Contents/Resources/AppIcon.icns",
+              "name" : "Music"
+            },
+            {
+              "bundleIdentifier" : "com.spotify.client",
+              "iconPath" : "/Applications/Spotify.app/Contents/Resources/Icon.icns",
+              "name" : "Spotify"
+            },
+            {
+              "bundleIdentifier" : "com.utmapp.UTM",
+              "iconPath" : "/Applications/UTM.app/Contents/Resources/AppIcon-macOS.icns",
+              "name" : "UTM"
+            }
+          ],
+          "assignAppShortcut" : "cmd+shift+4",
+          "display" : "M28U",
+          "id" : "52DB5116-F4F4-4DAF-A2D2-4DA5A568DCDF",
+          "name" : "Misc",
+          "shortcut" : "cmd+4",
+          "symbolIconName" : "4.circle"
+        },
+        {
+          "apps" : [
+            {
+              "bundleIdentifier" : "com.vmware.fusion",
+              "iconPath" : "/Applications/VMware Fusion.app/Contents/Resources/fusion.icns",
+              "name" : "VMware Fusion"
+            }
+          ],
+          "assignAppShortcut" : "cmd+shift+5",
+          "display" : "M28U",
+          "id" : "E6A32D41-4380-4BE8-94BC-D7A27661BE83",
+          "name" : "Excel",
+          "shortcut" : "cmd+5",
+          "symbolIconName" : "5.circle"
+        }
+      ]
+    }
+  ]
+}

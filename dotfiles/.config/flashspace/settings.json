@@ -1,0 +1,111 @@
+{
+  "activeWorkspaceOnFocusChange" : true,
+  "alternativeDisplays" : "",
+  "centerCursorOnFocusChange" : false,
+  "centerCursorOnWorkspaceChange" : false,
+  "changeWorkspaceOnAppAssign" : true,
+  "checkForUpdatesAutomatically" : false,
+  "displayMode" : "static",
+  "enableFocusManagement" : true,
+  "enableIntegrations" : false,
+  "enablePictureInPictureSupport" : true,
+  "enableSpaceControl" : false,
+  "enableSpaceControlAnimations" : true,
+  "enableSpaceControlTilesAnimations" : true,
+  "enableSwipeGestures" : false,
+  "enableWorkspaceTransitions" : false,
+  "floatTheFocusedApp" : "opt+shift+f",
+  "floatingApps" : [
+    {
+      "bundleIdentifier" : "com.apple.Preview",
+      "iconPath" : "/System/Applications/Preview.app/Contents/Resources/AppIcon.icns",
+      "name" : "Preview"
+    },
+    {
+      "bundleIdentifier" : "com.apple.FontBook",
+      "iconPath" : "/System/Applications/Font Book.app/Contents/Resources/AppIcon.icns",
+      "name" : "Font Book"
+    },
+    {
+      "bundleIdentifier" : "md.obsidian",
+      "iconPath" : "/Applications/Obsidian.app/Contents/Resources/icon.icns",
+      "name" : "Obsidian"
+    },
+    {
+      "bundleIdentifier" : "com.microsoft.rdc.macos",
+      "iconPath" : "/Applications/Windows App.app/Contents/Resources/AppIcon.icns",
+      "name" : "Windows App"
+    },
+    {
+      "bundleIdentifier" : "com.tplink.tapo",
+      "iconPath" : "/var/folders/vn/pllq7j1524n_blch_2974mvh0000gp/X/45E88C7C-C32C-58CF-9F3B-B6AB7C57DD03/d/Wrapper/Tapo.app/Contents/Resources/AppIcon.icns",
+      "name" : "Tapo"
+    },
+    {
+      "bundleIdentifier" : "com.apple.Notes",
+      "iconPath" : "/System/Applications/Notes.app/Contents/Resources/AppIcon.icns",
+      "name" : "Notes"
+    },
+    {
+      "bundleIdentifier" : "com.apple.Console",
+      "iconPath" : "/System/Applications/Utilities/Console.app/Contents/Resources/AppIcon.icns",
+      "name" : "Console"
+    },
+    {
+      "bundleIdentifier" : "com.googlecode.iterm2",
+      "iconPath" : "/Applications/iTerm.app/Contents/Resources/iTerm2 App Icon for Nightly.icns",
+      "name" : "iTerm2"
+    },
+    {
+      "bundleIdentifier" : "com.microsoft.Powerpoint",
+      "iconPath" : "/Applications/Microsoft PowerPoint.app/Contents/Resources/PPT3.icns",
+      "name" : "Microsoft PowerPoint"
+    },
+    {
+      "bundleIdentifier" : "io.podmandesktop.PodmanDesktop",
+      "iconPath" : "/Applications/Podman Desktop.app/Contents/Resources/icon.icns",
+      "name" : "Podman Desktop"
+    }
+  ],
+  "focusDown" : "cmd+opt+j",
+  "focusFrontmostWindow" : false,
+  "focusLeft" : "cmd+opt+h",
+  "focusNextWorkspaceApp" : "cmd+opt+i",
+  "focusPreviousWorkspaceApp" : "cmd+opt+u",
+  "focusRight" : "cmd+opt+l",
+  "focusUp" : "cmd+opt+k",
+  "keepUnassignedAppsOnSwitch" : false,
+  "loopWorkspaces" : true,
+  "menuBarDisplayAliases" : "",
+  "menuBarTitleTemplate" : "$WORKSPACE",
+  "pipApps" : [
+
+  ],
+  "pipScreenCornerOffset" : 15,
+  "restartAppOnWakeUp" : false,
+  "restoreHiddenAppsOnSwitch" : true,
+  "runScriptOnLaunch" : "",
+  "runScriptOnProfileChange" : "",
+  "runScriptOnWorkspaceChange" : "",
+  "showFloatingNotifications" : true,
+  "showMenuBarIcon" : false,
+  "showMenuBarTitle" : false,
+  "showSpaceControl" : "ctrl+ö",
+  "skipEmptyWorkspacesOnSwitch" : false,
+  "spaceControlCurrentDisplayWorkspaces" : false,
+  "spaceControlMaxColumns" : 6,
+  "spaceControlUpdateScreenshotsOnOpen" : false,
+  "swipeDown3FingerAction" : "none",
+  "swipeDown4FingerAction" : "none",
+  "swipeLeft3FingerAction" : "previousWorkspace",
+  "swipeLeft4FingerAction" : "none",
+  "swipeRight3FingerAction" : "nextWorkspace",
+  "swipeRight4FingerAction" : "none",
+  "swipeThreshold" : 0.2,
+  "swipeUp3FingerAction" : "none",
+  "swipeUp4FingerAction" : "none",
+  "switchWorkspaceWhenPipCloses" : true,
+  "unfloatTheFocusedApp" : "opt+shift+t",
+  "workspaceTransitionDimming" : 0.2,
+  "workspaceTransitionDuration" : 0.3
+}
