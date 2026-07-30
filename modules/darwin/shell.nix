@@ -42,13 +42,7 @@
           zoxide
         ]);
 
-      fonts.packages = with pkgs; [
-        nerd-fonts.jetbrains-mono
-        nerd-fonts.hack
-        nerd-fonts.iosevka-term
-        nerd-fonts.iosevka
-        iosevka-bin
-      ];
+      fonts.packages = import ../../lib/fonts.nix pkgs;
 
       programs.fish.enable = true;
       programs.zsh.enable = true;

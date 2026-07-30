@@ -6,21 +6,17 @@ macos-non-native-fullscreen = visible-menu
 mouse-hide-while-typing = true
 
 # Empty values reset the configuration to the default value
-font-family = "Iosevka Term SS03"
+font-family = "IoskeleyMono Nerd Font"
 # font-family = "Monaspace Neon"
 # font-family-bold = "Monaspace Xenon"
 # font-family-italic = "Monaspace Neon"
 # font-family-bold-italic = "Monaspace Krypton"
 # The following are optional settings for more balanced font weight
-font-style = "Medium"
-font-style-bold = "Italic"
-font-style-italic= "Italic"
-font-style-bold-italic = "Regular"
-font-feature = "+calt, +dlig, +ss03" # Iosevka Term SS03
-# font-feature = "+calt, +liga, +ss01, +ss02, +ss03, +ss04, +ss05, +ss06, +ss07, +ss08, +ss09" # Monaspace
-font-size = 14
-
-adjust-cell-height = 10%
+# font-style = "Medium"  # Broken: Medium is a sub-family, not a style
+# font-style-bold = "Bold"
+# font-style-italic = "Italic"
+# font-style-bold-italic = "Bold Italic"
+font-size = 16
 
 # mouse-scroll-multiplier = 0.5
 
@@ -29,7 +25,7 @@ adjust-cell-height = 10%
 # window-padding-y = 8
 
 #theme = catppuccin-mocha
-#theme = dark:modus_vivendi,light:modus_operandi
+theme = dark:modus_vivendi,light:modus_operandi
 #font-feature = -liga
 
 # Unbind CMD+... keys so they will be forwarded to Zellij

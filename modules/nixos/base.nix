@@ -103,15 +103,7 @@
       virtualisation.docker.enable = true;
       hardware.nvidia-container-toolkit.enable = true;
 
-      fonts.packages = with pkgs; [
-        font-awesome
-        nerd-fonts.hack
-        nerd-fonts.iosevka
-        nerd-fonts.iosevka-term
-        nerd-fonts.jetbrains-mono
-        iosevka-bin
-        ioskeley-mono.semiCondensed-NF
-      ];
+      fonts.packages = import ../../lib/fonts.nix pkgs;
 
       security.rtkit.enable = true;
       security.polkit.enable = true;
