@@ -50,6 +50,19 @@
       # "omniwm"
     ];
 
+    # Restart Raycast after darwin-rebuild switch to fix Hyper Key / Escape
+    # The activation reloads launchd and modifies /Applications, which invalidates
+    # Raycast's CGEventTap (used for Hyper Key) due to macOS TCC permission anchoring.
+    # Killing and reopening Raycast re-registers the event tap.
+    # Must use postActivation (not a custom key) — nix-darwin only executes hardcoded
+    # script names listed in activation-scripts.nix (see nix-darwin#663).
+    system.activationScripts.postActivation.text = ''
+      if pkill -x "Raycast Beta" 2>/dev/null; then
+        sleep 2
+      fi
+      su - tm -c "open -a 'Raycast Beta'" 2>/dev/null || true
+    '';
+
     # nix-homebrew declarative tap management
     nix-homebrew = {
       enable = true;
