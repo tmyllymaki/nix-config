@@ -52,7 +52,6 @@
         "zellij"
         "mise"
         "doom"
-        "ideavim"
       ];
     };
   };
