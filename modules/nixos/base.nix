@@ -86,6 +86,7 @@
         pavucontrol
         pwvucontrol
         ripgrep
+        fnm
         tree
         unzip
         wget
