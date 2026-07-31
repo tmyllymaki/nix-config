@@ -26,7 +26,7 @@ end
 local has_zmx = io.open(find_bin("zmx")) ~= nil
 
 config.set_environment_variables = {
-	PATH = "/run/current-system/sw/bin:/opt/homebrew/bin:" .. os.getenv("PATH"),
+	PATH = "/run/wrappers/bin:/run/current-system/sw/bin:/opt/homebrew/bin:" .. os.getenv("PATH"),
 }
 
 config.term = "wezterm"
