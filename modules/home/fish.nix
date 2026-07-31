@@ -69,6 +69,7 @@
         "fish/conf.d/rustup.fish" = mkSource "conf.d/rustup.fish";
         "fish/conf.d/uv.env.fish" = mkSource "conf.d/uv.env.fish";
         "fish/conf.d/zmx-wezterm.fish" = mkSource "conf.d/zmx-wezterm.fish";
+        "fish/conf.d/nix-paths.fish" = mkSource "conf.d/nix-paths.fish";
         "fish/completions/azd.fish" = mkSource "completions/azd.fish";
         "fish/completions/docker.fish" = mkSource "completions/docker.fish";
         "fish/completions/fisher.fish" = mkSource "completions/fisher.fish";

@@ -218,6 +218,13 @@ automatically-unhide-macos-hidden-apps = true
     if.app-id = 'com.spotify.client'
     run = 'move-node-to-workspace 4'
 
+[[on-window-detected]]
+    if.app-id="com.mitchellh.ghostty"
+    run= [
+      "layout floating",
+      "move-node-to-workspace 1"
+    ]
+
 [workspace-to-monitor-force-assignment]
     # Commented to support move workspace to monitor
     # 1 = ['main', 'secondary']
@@ -226,3 +233,4 @@ automatically-unhide-macos-hidden-apps = true
     # 4 = ['main', 'secondary']
     5 = ['secondary', 'main']
     6 = 'secondary'
+

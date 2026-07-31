@@ -67,6 +67,11 @@
           $DRY_RUN_CMD rm "${targetPath}"
         fi
         $DRY_RUN_CMD ln -sf "${finnerPath}" "${targetPath}"
+
+        if pkill -x "Raycast Beta" 2>/dev/null; then
+          sleep 2
+        fi
+        su - tm -c "open -a 'Raycast Beta'" 2>/dev/null || true
       '';
     };
   };
