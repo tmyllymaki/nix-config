@@ -5,12 +5,12 @@
     ...
   }: let
     pname = "helium";
-    version = "0.13.3.1";
+    version = "0.14.7.1";
 
     architectures = {
       "x86_64-linux" = {
         arch = "x86_64";
-        hash = "sha256-RS+Sn42V+HjCw41N1zayMVIqlgH+i2B2IdVJwBPmw00=";
+        hash = "sha256-JPsCvue71hlyS9woHsauX5xM/2PUJ+n8VEjOFquUDno=";
       };
       "aarch64-linux" = {
         arch = "arm64";
@@ -29,17 +29,16 @@
     appimage = pkgs.appimageTools.wrapType2 {
       inherit pname version src;
 
-      extraPkgs = pkgs: with pkgs; [ libsecret ];
+      extraPkgs = pkgs: with pkgs; [libsecret];
 
       extraInstallCommands = let
         appimageContents = pkgs.appimageTools.extractType2 {
           inherit pname version src;
         };
-      in
-        ''
-          install -Dm 444 ${appimageContents}/helium.desktop -t $out/share/applications
-          cp -r ${appimageContents}/usr/share/icons/. $out/share/icons
-        '';
+      in ''
+        install -Dm 444 ${appimageContents}/helium.desktop -t $out/share/applications
+        cp -r ${appimageContents}/usr/share/icons/. $out/share/icons
+      '';
 
       meta = {
         description = "Helium browser - a fork of ungoogled-chromium with enhanced features";
