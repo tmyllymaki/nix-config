@@ -87,6 +87,7 @@
           inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
           pkgs.quickshell
           pkgs.spotify
+          pkgs.vivaldi
           (pkgs.symlinkJoin {
             name = "vivaldi";
             paths = [pkgs.vivaldi];
