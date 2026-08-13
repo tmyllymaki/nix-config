@@ -207,8 +207,8 @@ end
 bind -M insert jk "if commandline -P; commandline -f cancel; else; set fish_bind_mode default; commandline -f backward-char force-repaint; end"
 
 # OP plugin alias
-set -gx OP_PLUGIN_ALIASES_SOURCED 1
-alias gh "op plugin run -- gh"
+# set -gx OP_PLUGIN_ALIASES_SOURCED 1
+# alias gh "op plugin run -- gh"
 
 if type -q zoxide
     zoxide init fish | source

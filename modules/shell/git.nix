@@ -12,6 +12,7 @@
 
       xdg.config.files."git/config" = {
         generator = lib.generators.toGitINI;
+        clobber = true;
         value = {
           user = {
             name = "tmyllymaki";

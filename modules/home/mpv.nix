@@ -19,18 +19,23 @@
 
       # modernz icons font needs to be in a fontconfig search path
       # since homebrew fontconfig doesn't search nix store paths
-      xdg.data.files."fonts/modernz-icons.ttf".source =
-        "${pkgs.mpvScripts.modernz}/share/fonts/truetype/modernz-icons.ttf";
+      xdg.data.files."fonts/modernz-icons.ttf" = {
+        source = "${pkgs.mpvScripts.modernz}/share/fonts/truetype/modernz-icons.ttf";
+        clobber = true;
+      };
 
-      xdg.config.files."mpv/mpv.conf".text = ''
-        hwdec=auto
-        volume=80
-        ytdl-format=bestvideo+bestaudio
-        demuxer-max-bytes=123400KiB
-        demuxer-readahead-secs=20
-        # modernz sub_margins compat
-        watch-later-options-remove=sub-pos
-      '';
+      xdg.config.files."mpv/mpv.conf" = {
+        text = ''
+          hwdec=auto
+          volume=80
+          ytdl-format=bestvideo+bestaudio
+          demuxer-max-bytes=123400KiB
+          demuxer-readahead-secs=20
+          # modernz sub_margins compat
+          watch-later-options-remove=sub-pos
+        '';
+        clobber = true;
+      };
     };
   };
 }

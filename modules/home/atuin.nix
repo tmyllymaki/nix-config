@@ -9,13 +9,26 @@
 
     config = lib.mkIf config.custom.home.atuin.enable {
       packages = [pkgs.atuin];
+
+      # Source of truth for atuin settings. Previous versions of this config
+      # were kept in the real file on disk (which hjem refused to clobber);
+      # clobber = true makes hjem own it again.
       xdg.config.files."atuin/config.toml" = {
         text = ''
-          search_mode = "fuzzy"
+          search_mode = "skim"
+          workspaces = true
+          filter_mode_shell_up_key_binding = "session"
+          search_mode_shell_up_key_binding = "skim"
+          style = "compact"
+          inline_height = 20
+          ctrl_n_shortcuts = true
+          enter_accept = false
 
-          [keybindings]
-          enter = "edit"
+          [sync]
+          # sync v2
+          records = true
         '';
+        clobber = true;
       };
     };
   };

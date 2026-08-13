@@ -10,9 +10,12 @@
     config = lib.mkIf config.custom.home.bat.enable {
       packages = [pkgs.bat];
 
-      xdg.config.files."bat/config".text = ''
-        --theme="ansi"
-      '';
+      xdg.config.files."bat/config" = {
+        text = ''
+          --theme="ansi"
+        '';
+        clobber = true;
+      };
     };
   };
 }

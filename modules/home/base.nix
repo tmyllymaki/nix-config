@@ -38,7 +38,7 @@
         ++ lib.optionals isLinux [xclip];
 
       environment.sessionVariables = {
-        BROWSER = "zen-browser";
+        BROWSER = "vivaldi";
         EDITOR = "nvim";
         VISUAL = "nvim";
         DOTNET_CLI_TELEMETRY_OPTOUT = "1";

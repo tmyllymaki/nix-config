@@ -17,13 +17,16 @@
         taps = [
           "homebrew/core"
           "homebrew/cask"
-          "qmk/homebrew-qmk"
-          "osx-cross/homebrew-avr"
-          "osx-cross/homebrew-arm"
-          "nikitabobko/homebrew-tap"
-          "felixkratz/homebrew-formulae"
-          "johnsideserf/homebrew-siggy"
-          "junian/homebrew-dotnet"
+          # Homebrew 6.0 enables HOMEBREW_REQUIRE_TAP_TRUST by default; non-official
+          # taps must be declared trusted or `brew bundle --force-cleanup` wipes
+          # their trust entries and activation fails loading formulae/casks from them.
+          { name = "qmk/homebrew-qmk"; trusted = true; }
+          { name = "osx-cross/homebrew-avr"; trusted = true; }
+          { name = "osx-cross/homebrew-arm"; trusted = true; }
+          { name = "nikitabobko/homebrew-tap"; trusted = true; }
+          { name = "felixkratz/homebrew-formulae"; trusted = true; }
+          { name = "johnsideserf/homebrew-siggy"; trusted = true; }
+          { name = "junian/homebrew-dotnet"; trusted = true; }
         ];
         brews = [
           "blueutil"

@@ -23,7 +23,6 @@
         "aerospace"
         "flashspace"
         "sketchybar"
-        "ideavim"
         "atuin"
         "mise"
         "fnm"
