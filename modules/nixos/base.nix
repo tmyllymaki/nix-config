@@ -70,6 +70,25 @@
 
       programs.fish.enable = true;
       programs.nix-ld.enable = true;
+      # Defaults + vulkan-loader: the PenguinBurner Q2RTX benchmark is a
+      # manylinux binary and resolves libvulkan.so.1 through nix-ld.
+      programs.nix-ld.libraries = with pkgs; [
+        zlib
+        zstd
+        stdenv.cc.cc
+        curl
+        openssl
+        attr
+        libssh
+        bzip2
+        libxml2
+        acl
+        libsodium
+        util-linux
+        xz
+        systemd
+        vulkan-loader
+      ];
       programs._1password.enable = true;
       programs._1password-gui.enable = true;
       programs._1password-gui.polkitPolicyOwners = ["tm"];

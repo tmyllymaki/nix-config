@@ -4,59 +4,109 @@
     lib,
     ...
   }: let
-    # Q2RTX runtime deps — the prebuilt binary needs these on LD_LIBRARY_PATH
-    q2rtxLibs = with pkgs; [
-      libidn2
-      libpsl
-      vulkan-loader
-      openssl_1_1
-      stdenv.cc.cc.lib
-    ];
-  in {
-    packages.penguin-burner = pkgs.python3Packages.buildPythonApplication rec {
-      pname = "penguin-burner";
-      version = "0.5.9";
-      pyproject = true;
+    version = "0.7.8";
 
-      src = pkgs.fetchFromGitHub {
-        owner = "jpietek";
-        repo = "PenguinBurner";
-        rev = "refs/tags/v${version}";
-        hash = "sha256-lFXqRlUlNf1oV55xcdgDLN2BhzcIMPW90FmHWOUV0h4=";
-      };
+    src = pkgs.fetchFromGitHub {
+      owner = "jpietek";
+      repo = "PenguinBurner";
+      rev = "refs/tags/v${version}";
+      hash = "sha256-7T01zQPkjq2CHh9PF0kLfpOQ3pHLI0sWRHV9F9WZT5A=";
+    };
 
-      build-system = with pkgs.python3Packages; [
-        setuptools
-        wheel
-      ];
+    python = pkgs.python3Packages.python;
 
-      dependencies = with pkgs.python3Packages; [
-        pyside6
-        colorama
-        pyqtgraph
-      ];
-
-      # pyproject.toml declares PySide6-Essentials (pip name) but
-      # nixpkgs provides pyside6. Patch to match for the dep check.
-      postPatch = ''
-        substituteInPlace pyproject.toml \
-          --replace-fail '"PySide6-Essentials' '"pyside6'
-      '';
-
-      # NixOS-specific: the daemon and Q2RTX subprocesses need GPU libs
-      # and runtime deps. Set them via wrapper so subprocesses inherit them.
-      makeWrapperArgs = [
-        "--set SDL_DYNAMIC_API ${pkgs.SDL2}/lib/libSDL2.so"
-        "--prefix LD_LIBRARY_PATH : /run/opengl-driver/lib"
-        "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath q2rtxLibs}"
-      ];
-
+    # Privileged root daemon (Rust). The wheel's setup.py would invoke cargo
+    # directly (no network in the Nix sandbox), so it is built separately with
+    # buildRustPackage and dropped into the Python package in postInstall.
+    penguin-burnerd = pkgs.rustPlatform.buildRustPackage {
+      pname = "penguin-burnerd";
+      inherit version src;
+      sourceRoot = "source/burnerd";
+      # importCargoLock: crates are fetched per-checksum from the committed
+      # lockfile, so no cargoHash is needed.
+      cargoLock.lockFile = "${src}/burnerd/Cargo.lock";
+      # Two tests are timing/sandbox sensitive and fail in the Nix sandbox
+      # (a frame-time snapshot assertion and a close_range fd test).
+      doCheck = false;
       meta = {
-        description = "NVIDIA GPU automatic undervolting tool with precision V/F tuning";
+        description = "PenguinBurner root daemon (socket API + runtime profile engine)";
         homepage = "https://github.com/jpietek/PenguinBurner";
         license = lib.licenses.gpl3Only;
-        mainProgram = "penguin-burner";
+        mainProgram = "penguin-burnerd";
         platforms = lib.platforms.linux;
+      };
+    };
+  in {
+    packages = {
+      inherit penguin-burnerd;
+
+      penguin-burner = pkgs.python3Packages.buildPythonApplication {
+        pname = "penguin-burner";
+        inherit version src;
+        pyproject = true;
+
+        build-system =
+          (with pkgs.python3Packages; [
+            setuptools
+            wheel
+          ])
+          ++ [
+            # setup.py compiles the native Vulkan latency layer with cmake
+            pkgs.cmake
+            pkgs.vulkan-headers
+          ];
+
+        dependencies = with pkgs.python3Packages; [
+          pyside6
+          colorama
+          pyqtgraph
+        ];
+
+        # Skip setup.py's own native builds: the Rust daemon comes from
+        # buildRustPackage above, and the NVAPI shim needs MinGW (optional —
+        # in-game latency falls back to the Vulkan layer without it).
+        env = {
+          PENGUIN_BURNER_BUILD_DAEMON = "0";
+          PENGUIN_BURNER_BUILD_NVAPI_SHIM = "0";
+          # cmake is on PATH only for setup.py's layer build; the generic
+          # cmakeConfigurePhase must not try to configure the Python project.
+          dontUseCmakeConfigure = "1";
+          # find_path for vulkan/vulkan.h in the latency layer build
+          CMAKE_INCLUDE_PATH = "${pkgs.vulkan-headers}/include";
+        };
+
+        postPatch = ''
+          # pyproject.toml declares PySide6-Essentials (pip name) but nixpkgs
+          # provides pyside6. Patch to match for the dep check.
+          substituteInPlace pyproject.toml \
+            --replace-fail '"PySide6-Essentials' '"pyside6'
+
+          # NixOS: the daemon strips LD_LIBRARY_PATH from the scan child, and
+          # libcuda.so.1 lives in the NVIDIA driver's run path.
+          substituteInPlace stability/cuda_bruteforce.py \
+            --replace-fail 'ctypes.util.find_library("cuda") or "libcuda.so.1"' \
+              'ctypes.util.find_library("cuda") or "/run/opengl-driver/lib/libcuda.so.1"'
+        '';
+
+        postInstall = ''
+          mkdir -p "$out/${python.sitePackages}/runtime/daemon_bin"
+          cp ${penguin-burnerd}/bin/penguin-burnerd \
+            "$out/${python.sitePackages}/runtime/daemon_bin/penguin-burnerd"
+        '';
+
+        # GUI/CLI may dlopen libnvidia-ml.so.1 / libnvidia-api.so.1 for GPU
+        # discovery; they live in the driver's run path on NixOS.
+        makeWrapperArgs = [
+          "--prefix LD_LIBRARY_PATH : /run/opengl-driver/lib"
+        ];
+
+        meta = {
+          description = "NVIDIA GPU automatic undervolting tool with precision V/F tuning";
+          homepage = "https://github.com/jpietek/PenguinBurner";
+          license = lib.licenses.gpl3Only;
+          mainProgram = "penguin-burner";
+          platforms = lib.platforms.linux;
+        };
       };
     };
   };

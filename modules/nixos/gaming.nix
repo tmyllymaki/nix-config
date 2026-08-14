@@ -32,23 +32,40 @@
       # The GUI communicates with it via /run/penguin-burnerd.sock.
       systemd.services.penguin-burnerd = let
         penguin = extras.mypkgs.penguin-burner;
+        python = pkgs.python3Packages.python;
+        scanPython = python.withPackages (ps: with ps; [pyside6 colorama pyqtgraph]);
+        uid = config.users.users.tm.uid;
       in {
         description = "PenguinBurner hardware daemon";
         after = ["multi-user.target"];
         wantedBy = ["multi-user.target"];
         serviceConfig = {
-          Type = "simple";
+          Type = "notify";
+          WatchdogSec = 30;
           WorkingDirectory = "/";
           Restart = "on-failure";
           RestartSec = "2";
           StandardOutput = "journal";
           StandardError = "journal";
           SyslogIdentifier = "penguin-burnerd";
-          ExecStart = "${penguin}/bin/penguin-burner-cli --daemon-api /run/penguin-burnerd.sock";
+          ExecStart = "${extras.mypkgs.penguin-burnerd}/bin/penguin-burnerd --socket /run/penguin-burnerd.sock";
         };
-        # Inherit LD_LIBRARY_PATH from the package wrapper for NVML / Q2RTX libs
         environment = {
-          SDL_DYNAMIC_API = "${pkgs.SDL2}/lib/libSDL2.so";
+          # Scan worker (Python CLI) the daemon spawns during Auto-UV scans,
+          # dropped to the desktop user. Mirrors upstream's generated unit.
+          PENGUIN_BURNER_DAEMON_PROGRAM_FILE = "${penguin}/${python.sitePackages}/penguin_burner.py";
+          PENGUIN_BURNER_DAEMON_PYTHON = "${scanPython}/bin/python3";
+          PENGUIN_BURNER_DAEMON_ALLOWED_UID = toString uid;
+          PENGUIN_BURNER_Q2RTX_UID = toString uid;
+          # Driver libs (libnvidia-ml / libnvidia-api) for the daemon's dlopen
+          LD_LIBRARY_PATH = "/run/opengl-driver/lib";
+          # Q2RTX is a manylinux binary: resolve its libs through nix-ld
+          # (libvulkan comes from programs.nix-ld.libraries).
+          NIX_LD = "/run/current-system/sw/share/nix-ld/lib/ld.so";
+          NIX_LD_LIBRARY_PATH = "/run/current-system/sw/share/nix-ld/lib";
+          # ldd/ps and friends for the scan child's runtime checks (default
+          # systemd PATH + procps + glibc tools)
+          PATH = lib.mkForce "/run/current-system/sw/bin:${pkgs.coreutils}/bin:${pkgs.findutils}/bin:${pkgs.gnugrep}/bin:${pkgs.gnused}/bin:${pkgs.systemd}/bin:${pkgs.procps}/bin:${pkgs.glibc.bin}/bin";
         };
       };
 
