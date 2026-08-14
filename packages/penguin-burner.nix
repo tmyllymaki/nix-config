@@ -15,6 +15,12 @@
 
     python = pkgs.python3Packages.python;
 
+    deps = with pkgs.python3Packages; [
+      pyside6
+      colorama
+      pyqtgraph
+    ];
+
     # Privileged root daemon (Rust). The wheel's setup.py would invoke cargo
     # directly (no network in the Nix sandbox), so it is built separately with
     # buildRustPackage and dropped into the Python package in postInstall.
@@ -56,11 +62,7 @@
             pkgs.vulkan-headers
           ];
 
-        dependencies = with pkgs.python3Packages; [
-          pyside6
-          colorama
-          pyqtgraph
-        ];
+        dependencies = deps;
 
         # Skip setup.py's own native builds: the Rust daemon comes from
         # buildRustPackage above, and the NVAPI shim needs MinGW (optional —
@@ -96,8 +98,15 @@
 
         # GUI/CLI may dlopen libnvidia-ml.so.1 / libnvidia-api.so.1 for GPU
         # discovery; they live in the driver's run path on NixOS.
+        #
+        # The nix console-script bootstrap adds the package's site-packages
+        # in-process, but the GUI spawns `sys.executable -m runtime.daemon_client`
+        # children (Qt QProcess, inherited env): export PYTHONPATH so those
+        # children can import the package.
         makeWrapperArgs = [
           "--prefix LD_LIBRARY_PATH : /run/opengl-driver/lib"
+          "--prefix PYTHONPATH : $out/${python.sitePackages}"
+          "--prefix PYTHONPATH : ${lib.makeSearchPath python.sitePackages deps}"
         ];
 
         meta = {
