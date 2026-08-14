@@ -12,6 +12,7 @@
 
     config = lib.mkIf config.custom.home.llm-agents.enable {
       packages = [
+        llmPkgs.agent-browser
         llmPkgs.claude-code
         llmPkgs.opencode
         llmPkgs.pi
