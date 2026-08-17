@@ -41,6 +41,10 @@ set -gx TERM xterm-256color
 
 if test (uname) = Darwin
     set -x DOTNET_ROOT /opt/homebrew/opt/dotnet/libexec
+else if command -q dotnet
+    # Nix: dotnet is a symlink into the store. Resolve it so framework-dependent
+    # apphosts (dotnet tools like easy-dotnet's server) can find the runtime.
+    set -x DOTNET_ROOT (path dirname (realpath (command -v dotnet)))
 else
     set -x DOTNET_ROOT $HOME/.dotnet
 end
