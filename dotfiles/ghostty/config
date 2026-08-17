@@ -27,6 +27,7 @@ theme = dark:modus_vivendi,light:modus_operandi
 #font-feature = -liga
 
 # Unbind CMD+... keys so they will be forwarded to Zellij
+keybind = ctrl+,=unbind
 # keybind = cmd+t=unbind
 # keybind = cmd+n=unbind
 # keybind = cmd+c=unbind
