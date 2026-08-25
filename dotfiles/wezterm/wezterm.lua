@@ -179,6 +179,52 @@ local project_layouts = {
 	},
 }
 
+-- The workspace wezterm starts in doubles as a global scratch session: it has
+-- no project dir, it keeps running while hidden, and it is reachable from any
+-- project workspace with a single toggle.
+local SCRATCH_WORKSPACE = "default"
+
+local function workspace_exists(name)
+	for _, ws in ipairs(wezterm.mux.get_workspace_names()) do
+		if ws == name then
+			return true
+		end
+	end
+	return false
+end
+
+-- Where to go when leaving the scratch workspace.
+local function scratch_return_workspace()
+	local previous = wezterm.GLOBAL.scratch_return_workspace
+	if previous and previous ~= SCRATCH_WORKSPACE and workspace_exists(previous) then
+		return previous
+	end
+
+	-- The stored workspace is gone (wezterm restart, or its window was closed).
+	-- Fall back to any other open workspace.
+	for _, ws in ipairs(wezterm.mux.get_workspace_names()) do
+		if ws ~= SCRATCH_WORKSPACE then
+			return ws
+		end
+	end
+
+	return nil
+end
+
+-- Show the scratch workspace, or go back to the workspace it was invoked from.
+local function toggle_scratch_workspace(window, pane)
+	if window:active_workspace() == SCRATCH_WORKSPACE then
+		local back = scratch_return_workspace()
+		if back then
+			window:perform_action(wezterm.action.SwitchToWorkspace({ name = back }), pane)
+		end
+		return
+	end
+
+	wezterm.GLOBAL.scratch_return_workspace = window:active_workspace()
+	window:perform_action(wezterm.action.SwitchToWorkspace({ name = SCRATCH_WORKSPACE }), pane)
+end
+
 local function zmx_session_picker(window, pane)
 	-- Check which workspaces are already open
 	local open_workspaces = {}
@@ -270,13 +316,11 @@ local function zmx_session_picker(window, pane)
 
 	-- 1) Open workspaces (instant switch)
 	for ws, _ in pairs(open_workspaces) do
-		if ws ~= "default" then
-			table.insert(choices, {
-				id = "ws:" .. ws,
-				label = "● " .. ws .. "  (open)",
-			})
-			seen[ws] = true
-		end
+		table.insert(choices, {
+			id = "ws:" .. ws,
+			label = "● " .. ws .. (ws == SCRATCH_WORKSPACE and "  (scratch)" or "  (open)"),
+		})
+		seen[ws] = true
 	end
 
 	-- 2) Zmx sessions that have a matching zoxide dir (use dir: so multi-tab restore works)
@@ -330,6 +374,9 @@ local function zmx_session_picker(window, pane)
 
 				-- Already open workspace: just switch
 				if kind == "ws" then
+					-- Keep the scratch toggle in sync: whatever we leave here is
+					-- where the toggle should bring us back to.
+					wezterm.GLOBAL.scratch_return_workspace = inner_window:active_workspace()
 					inner_window:perform_action(wezterm.action.SwitchToWorkspace({ name = value }), inner_pane)
 					return
 				end
@@ -535,6 +582,13 @@ config.keys = {
 		key = "p",
 		mods = "LEADER|CTRL",
 		action = wezterm.action_callback(zmx_session_picker),
+	},
+
+	-- Scratch workspace: show it, or go back to where the toggle was pressed
+	{
+		key = "d",
+		mods = "LEADER",
+		action = wezterm.action_callback(toggle_scratch_workspace),
 	},
 
 	-- Kill a zmx session
