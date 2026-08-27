@@ -11,6 +11,11 @@
       "docker-credential-helper"
     ];
 
+    custom.system.homebrew.extraCasks = [
+      "microsoft-teams"
+      "logi-options+"
+    ];
+
     # Enable system modules
     custom.quickenable.system.modules = [
       "base"
