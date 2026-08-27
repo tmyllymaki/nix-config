@@ -4,10 +4,27 @@
     lib,
     pkgs,
     ...
-  }: {
-    options.custom.home.git.enable = lib.mkEnableOption "home.git";
+  }: let
+    cfg = config.custom.home.git;
+  in {
+    options.custom.home.git = {
+      enable = lib.mkEnableOption "home.git";
 
-    config = lib.mkIf config.custom.home.git.enable {
+      userName = lib.mkOption {
+        type = lib.types.str;
+        default = "tmyllymaki";
+        description = "Value for git's user.name.";
+      };
+
+      userEmail = lib.mkOption {
+        type = lib.types.str;
+        default = "tmyllymaki@fastmail.com";
+        example = "timo.myllymaki@paretosoftware.fi";
+        description = "Value for git's user.email.";
+      };
+    };
+
+    config = lib.mkIf cfg.enable {
       packages = [pkgs.git];
 
       xdg.config.files."git/config" = {
@@ -15,8 +32,8 @@
         clobber = true;
         value = {
           user = {
-            name = "tmyllymaki";
-            email = "tmyllymaki@fastmail.com";
+            name = cfg.userName;
+            email = cfg.userEmail;
           };
           init.defaultBranch = "main";
           rerere = {

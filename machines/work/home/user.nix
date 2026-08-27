@@ -1,8 +1,14 @@
 {
-  flake.nixosMachineModules.laptop = {config, ...}: {
+  flake.nixosMachineModules.work = {
+    config,
+    pkgs,
+    ...
+  }: {
     # users.users.<name> and hjem.users.<name>.directory come from
     # modules/options/user.nix; only per-machine app selection lives here.
     hjem.users.${config.custom.user.name} = {
+      custom.home.git.userEmail = "timo.myllymaki@paretosoftware.fi";
+
       custom.quickenable.hjem.modules = [
         "git"
         "mpv"
@@ -23,7 +29,7 @@
       ];
 
       packages = [
-        # pkgs.supersonic broken atm
+        pkgs.devenv
       ];
     };
   };

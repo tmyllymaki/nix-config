@@ -1,6 +1,6 @@
 {lib, ...}: let
   inherit (lib) mkOption;
-  inherit (lib.types) attrsOf deferredModule;
+  inherit (lib.types) attrsOf deferredModule raw;
 in {
   options.flake = {
     # Machine modules are separate from system modules to avoid unintended
@@ -17,7 +17,15 @@ in {
       description = "Hjem modules for user-level configuration";
     };
 
-    # Not defined by flake-parts (it's nix-darwin specific), so we declare it here.
+    # Not defined by flake-parts (they're nix-darwin specific), so we declare
+    # them here. darwinConfigurations in particular needs a declared option so
+    # more than one machine can contribute to it.
+    darwinConfigurations = mkOption {
+      type = attrsOf raw;
+      default = {};
+      description = "Nix-darwin system configurations, one per Mac";
+    };
+
     darwinModules = mkOption {
       type = attrsOf deferredModule;
       default = {};

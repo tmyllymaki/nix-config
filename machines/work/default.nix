@@ -6,6 +6,6 @@
 }:
 import ../../lib/mk-darwin.nix {
   inherit config inputs mkExtras;
-  machine = "laptop";
-  hostname = "Timos-MacBook-Air";
+  machine = "work";
+  hostname = "tm-macbook-pro";
 }
