@@ -4,5 +4,8 @@ go = "1.23.12"
 node = "22.20.0"
 watchexec = "latest"
 
+# Global npm CLIs — installed against the mise-managed node above.
+"npm:@tobilu/qmd" = "latest"
+
 [settings]
 experimental = true
