@@ -48,11 +48,12 @@
           ripgrep
           starship
           topgrade
+          uv
           wget
           yadm
           yazi
-          zoxide
           zmx
+          zoxide
         ]);
 
       fonts.packages = import ../../lib/fonts.nix pkgs;

@@ -2,6 +2,7 @@
   flake.nixosMachineModules.work = {
     config,
     pkgs,
+    extras,
     ...
   }: {
     # users.users.<name> and hjem.users.<name>.directory come from
@@ -30,6 +31,9 @@
 
       packages = [
         pkgs.devenv
+        # harlequin with the Databricks adapter (see packages/harlequin.nix);
+        # plain pkgs.harlequin ships only the Postgres and BigQuery adapters.
+        extras.mypkgs.harlequin
       ];
     };
   };
