@@ -8,16 +8,6 @@
   }: {
     options.custom.system.shell = {
       enable = lib.mkEnableOption "system.shell";
-
-      raycastApp = lib.mkOption {
-        type = lib.types.str;
-        default = "Raycast";
-        example = "Raycast Beta";
-        description = ''
-          Name of the installed Raycast application bundle. Restarted after the
-          Finner keyboard layout is linked so it picks the layout up.
-        '';
-      };
     };
 
     config = lib.mkIf config.custom.system.shell.enable {
@@ -62,31 +52,28 @@
       programs.zsh.enable = true;
 
       system.activationScripts.postActivation.text = let
-        raycastApp = config.custom.system.shell.raycastApp;
         finnerPath = "${extras.mypkgs.finner-keyboard}/Finner.keylayout";
         targetDir = "/Library/Keyboard Layouts";
         targetPath = "${targetDir}/Finner.keylayout";
       in ''
-        if [ ! -d "${targetDir}" ]; then
-          echo "Creating ${targetDir} directory..."
-          $DRY_RUN_CMD mkdir -p "${targetDir}"
-        fi
-
         if [ ! -f "${finnerPath}" ]; then
           echo "Finner keyboard layout file not found at ${finnerPath}."
           exit 1
         fi
 
-        echo "Linking Finner keyboard layout to ${targetPath}..."
-        if [ -L "${targetPath}" ]; then
-          $DRY_RUN_CMD rm "${targetPath}"
-        fi
-        $DRY_RUN_CMD ln -sf "${finnerPath}" "${targetPath}"
+        # Only relink when the store path actually changed, so a rebuild that
+        # does not touch the layout leaves /Library/Keyboard Layouts alone.
+        if [ "$(readlink "${targetPath}" 2>/dev/null)" = "${finnerPath}" ]; then
+          echo "Finner keyboard layout already up to date."
+        else
+          if [ ! -d "${targetDir}" ]; then
+            echo "Creating ${targetDir} directory..."
+            $DRY_RUN_CMD mkdir -p "${targetDir}"
+          fi
 
-        if pkill -x "${raycastApp}" 2>/dev/null; then
-          sleep 2
+          echo "Linking Finner keyboard layout to ${targetPath}..."
+          $DRY_RUN_CMD ln -shf "${finnerPath}" "${targetPath}"
         fi
-        su - ${config.custom.user.name} -c "open -a '${raycastApp}'" 2>/dev/null || true
       '';
     };
   };

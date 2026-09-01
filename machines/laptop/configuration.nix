@@ -13,9 +13,6 @@
       extraCasks = ["container"];
     };
 
-    # Personal machine tracks the Raycast beta channel.
-    custom.system.shell.raycastApp = "Raycast Beta";
-
     # Enable system modules
     custom.quickenable.system.modules = [
       "base"

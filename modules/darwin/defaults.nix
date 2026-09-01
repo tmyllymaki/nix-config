@@ -7,8 +7,8 @@
     options.custom.system.defaults.enable = lib.mkEnableOption "system.defaults";
 
     config = lib.mkIf config.custom.system.defaults.enable {
-      system.keyboard.enableKeyMapping = true;
-      system.keyboard.remapCapsLockToEscape = false;
+      # This wipes existing mappings like Raycast hyper key
+      system.keyboard.enableKeyMapping = false;
 
       system.defaults.trackpad.Dragging = true;
 
