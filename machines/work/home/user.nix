@@ -31,6 +31,8 @@
 
       packages = [
         pkgs.devenv
+        pkgs.pandoc
+        pkgs.typst
         # harlequin with the Databricks adapter (see packages/harlequin.nix);
         # plain pkgs.harlequin ships only the Postgres and BigQuery adapters.
         extras.mypkgs.harlequin
