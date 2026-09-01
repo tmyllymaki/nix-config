@@ -14,6 +14,7 @@
     custom.system.homebrew.extraCasks = [
       "microsoft-teams"
       "logi-options+"
+      "linear"
     ];
 
     # Enable system modules
