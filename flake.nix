@@ -78,10 +78,7 @@
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     llama-cpp.url = "github:ggerganov/llama.cpp";
 
-    llm-agents = {
-      url = "github:numtide/llm-agents.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    llm-agents.url = "github:numtide/llm-agents.nix";
 
     ts3-noweb.url = "github:Jokler/ts3client-noweb-nix";
   };
