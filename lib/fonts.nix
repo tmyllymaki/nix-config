@@ -1,5 +1,9 @@
 # Shared font packages for NixOS and nix-darwin.
 #
+# The Term variant is used because the default spacing draws arrows and
+# similar symbols two cells wide, so they overlap the next character in
+# terminals. Term narrows them to one cell.
+#
 # Patch: the upstream IoskeleyMono Nerd Font release has isFixedPitch = 0
 # in the post table, which makes CoreText (macOS) and Fontconfig
 # (fc-list :mono) not recognize it as monospace. Ghostty/terminal
@@ -7,7 +11,7 @@
 # See: https://github.com/ahatem/IoskeleyMono/issues/19
 pkgs: let
   pythonWithFontTools = pkgs.python3.withPackages (ps: [ps.fonttools]);
-  ioskeley-mono-fixed = pkgs.ioskeley-mono.semiCondensed-NF.overrideAttrs (old: {
+  ioskeley-mono-fixed = pkgs.ioskeley-mono.semiCondensed-term-NF.overrideAttrs (old: {
     nativeBuildInputs = (old.nativeBuildInputs or []) ++ [pythonWithFontTools];
     postInstall = (old.postInstall or "") + ''
       for f in "$out/share/fonts/"*/*.ttf; do

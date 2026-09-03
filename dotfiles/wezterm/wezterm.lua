@@ -91,7 +91,7 @@ local colors = config.color_schemes[config.color_scheme]
 config.colors = colors
 
 config.font =
-	wezterm.font("IoskeleyMono Nerd Font", { weight = "Medium", stretch = "SemiCondensed", style = "Normal" })
+	wezterm.font("IoskeleyMonoTerm Nerd Font", { weight = "Medium", stretch = "SemiCondensed", style = "Normal" })
 -- config.font = wezterm.font("Iosevka Term SS03", { weight = "Medium" })
 config.font_size = 16
 config.line_height = 1.0

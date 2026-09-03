@@ -678,9 +678,9 @@
     },
     "ui": {
         "boxBorderEnabled": true,
-        "fontDefault": "IoskeleyMono Nerd Font",
+        "fontDefault": "IoskeleyMonoTerm Nerd Font",
         "fontDefaultScale": 1,
-        "fontFixed": "IoskeleyMono Nerd Font",
+        "fontFixed": "IoskeleyMonoTerm Nerd Font",
         "fontFixedScale": 1,
         "panelBackgroundOpacity": 0.93,
         "panelsAttachedToBar": true,
