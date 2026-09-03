@@ -15,14 +15,18 @@
       # clobber = true makes hjem own it again.
       xdg.config.files."atuin/config.toml" = {
         text = ''
-          search_mode = "skim"
           workspaces = true
           filter_mode_shell_up_key_binding = "session"
-          search_mode_shell_up_key_binding = "skim"
+          search_mode_shell_up_key_binding = "daemon-fuzzy"
           style = "compact"
           inline_height = 20
           ctrl_n_shortcuts = true
           enter_accept = false
+          search_mode = "daemon-fuzzy"
+
+          [daemon]
+          enabled = true
+          autostart = true
 
           [sync]
           # sync v2
