@@ -14,6 +14,7 @@
       packages = [
         llmPkgs.agent-browser
         llmPkgs.claude-code
+        llmPkgs.codex
         llmPkgs.opencode
         llmPkgs.pi
         llmPkgs.claude-code
