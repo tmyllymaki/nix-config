@@ -21,7 +21,6 @@
       "gaming"
       "hibernate"
       "nfs"
-      "rclone"
       "plasma"
       "secureboot"
       "velocity-bridge"

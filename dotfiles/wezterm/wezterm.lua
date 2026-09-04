@@ -25,6 +25,20 @@ end
 -- Check if a binary actually exists on this machine
 local has_zmx = io.open(find_bin("zmx")) ~= nil
 
+-- Machine-local, untracked overrides: ~/.config/wezterm-local.lua
+-- The file should `return` a table; every field is optional:
+--   issue_trackers  = { { prefix = "ABC", url = "https://example.atlassian.net" } }
+--   project_layouts = { ["project-dir-name"] = { { session = "nvim", cmd = "nvim" } } }
+-- ~/.config/wezterm itself is a read-only symlink managed by nix, so the file
+-- lives next to it rather than inside it.
+local local_cfg = {}
+do
+	local ok, result = pcall(dofile, wezterm.home_dir .. "/.config/wezterm-local.lua")
+	if ok and type(result) == "table" then
+		local_cfg = result
+	end
+end
+
 config.set_environment_variables = {
 	PATH = "/run/wrappers/bin:/run/current-system/sw/bin:/opt/homebrew/bin:" .. os.getenv("PATH"),
 }
@@ -140,20 +154,15 @@ config.tab_bar_at_bottom = true
 -- Hyperlink rules
 config.hyperlink_rules = wezterm.default_hyperlink_rules()
 
-table.insert(config.hyperlink_rules, {
-	regex = [[\b(TEL-\d+)\b]],
-	format = "https://example-a.atlassian.net/browse/$1",
-})
-
-table.insert(config.hyperlink_rules, {
-	regex = [[\b(BFT-\d+)\b]],
-	format = "https://example-b.atlassian.net/browse/$1",
-})
-
-table.insert(config.hyperlink_rules, {
-	regex = [[\b([a-zA-Z]{3}-\d+)\b]],
-	format = "https://example-c.atlassian.net/browse/$1",
-})
+-- Issue-tracker links come from the machine-local file (see local_cfg above),
+-- so client/project names stay out of this repo. `prefix` is a regex fragment
+-- matched before "-<digits>", e.g. "ABC" or "[a-zA-Z]{3}".
+for _, tracker in ipairs(local_cfg.issue_trackers or {}) do
+	table.insert(config.hyperlink_rules, {
+		regex = "\\b(" .. tracker.prefix .. "-\\d+)\\b",
+		format = tracker.url .. "/browse/$1",
+	})
+end
 
 table.insert(config.hyperlink_rules, {
 	regex = [[["]?([\w\d]{1}[-\w\d]+)(/){1}([-\w\d\.]+)["]?]],
@@ -171,13 +180,11 @@ config.mouse_bindings = {
 -- Per-project tab layouts (optional)
 -- Each tab gets its own zmx session named "<project>-<session>"
 -- Projects without a layout get a single tab with "zmx attach <project>"
-local project_layouts = {
-	["example-project"] = {
-		{ session = "nvim", cmd = "nvim" },
-		{ session = "backend" },
-		{ session = "frontend" },
-	},
-}
+-- Layouts are defined in the machine-local file (see local_cfg above), e.g.
+--   project_layouts = {
+--     ["my-project"] = { { session = "nvim", cmd = "nvim" }, { session = "backend" } },
+--   }
+local project_layouts = local_cfg.project_layouts or {}
 
 -- The workspace wezterm starts in doubles as a global scratch session: it has
 -- no project dir, it keeps running while hidden, and it is reachable from any

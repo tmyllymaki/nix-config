@@ -113,3 +113,22 @@
   - New NixOS machine: create machines/mybox/ following the same three-file pattern, using
   nixosSystem instead of darwinSystem, and import nixosModules.all instead of
   darwinModules.all
+
+  Secrets and machine-local values
+
+  This repo is public. Nothing in it may contain a credential, and client or employer
+  identifiers stay out of it too. The conventions:
+
+  - Runtime secrets (API tokens, database passwords) are read from 1Password at the moment
+  they are needed, via `op read op://...`. See dotfiles/doom/config.el for the pattern.
+  - Shell-level secrets live in ~/.config/fish/secrets.fish, which is sourced if present
+  and is not tracked.
+  - Per-machine wezterm values (issue-tracker hyperlink rules, per-project tab layouts)
+  live in ~/.config/wezterm-local.lua, which wezterm.lua loads if present. The file returns
+  a table; see the comment near the top of dotfiles/wezterm/wezterm.lua for its shape.
+  - User login passwords are not in the config. users.mutableUsers is left at its default,
+  so after a fresh install set the password once with `passwd <user>` (from the installer
+  via `nixos-enter --root /mnt -c 'passwd tm'`, or as root on a console). It then persists
+  across rebuilds.
+  - If a system-level secret is ever needed at activation time, add agenix or sops-nix
+  rather than committing the value.

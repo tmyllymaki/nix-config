@@ -17,7 +17,6 @@
         "video"
         "docker"
       ];
-      hashedPassword = "***REMOVED***";
       linger = true;
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICmTIzff+A0lJ0AlmZ8HOXPZAA4bPKYHI7Rowi2PYOgV tm"
