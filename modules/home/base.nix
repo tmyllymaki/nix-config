@@ -5,7 +5,7 @@
     pkgs,
     ...
   }: let
-    inherit (pkgs.stdenv) isLinux isDarwin;
+    inherit (pkgs.stdenv.hostPlatform) isLinux isDarwin;
   in {
     options.custom.home.base.enable = lib.mkEnableOption "home.base";
 

@@ -6,7 +6,7 @@
     ...
   }: let
     inherit (pkgs) imagemagick;
-    inherit (pkgs.stdenv) isLinux;
+    inherit (pkgs.stdenv.hostPlatform) isLinux;
   in {
     options.custom.home.clipboard-image.enable = lib.mkEnableOption "home.clipboard-image";
 
