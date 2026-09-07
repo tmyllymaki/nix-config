@@ -61,12 +61,25 @@ and `home/user.nix` defines the user and the home module list.
 
 ## Usage
 
+Everything is driven by [nh](https://github.com/nix-community/nh), which is
+installed on every machine by the config itself.
+
 ```sh
-make switch                 # rebuild the current machine (NIXNAME=desktop by default)
-make switch NIXNAME=work    # pick a machine explicitly
-make test                   # build and activate without making it the boot default
-nh os switch -H desktop     # on the NixOS desktop, if you prefer nh
+# NixOS desktop
+nh os switch -H desktop          # build and activate, make it the boot default
+nh os test -H desktop            # build and activate without touching the bootloader
+nh os build -H desktop           # build only
+
+# Macs (run from the repo root; -H picks the machine)
+nh darwin switch . -H work
+nh darwin switch . -H laptop
+
+nh clean all --keep 3            # garbage-collect old generations
 ```
+
+`nh os` reads the flake from `NH_FLAKE`, which the NixOS base module sets to
+`/etc/nixos`. On the Macs pass the flake path explicitly, or export `NH_FLAKE`
+yourself.
 
 New files must be `git add`ed before building; flakes only see tracked files.
 

@@ -32,6 +32,7 @@
           mergiraf
           mise
           ncdu
+          nh
           nixd
           pandoc
           pipx

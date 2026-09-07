@@ -104,7 +104,7 @@ custom.quickenable.system.modules = [ ... "<name>" ];
 | `nh os switch -H desktop` | Build and switch NixOS desktop |
 | `sudo nixos-rebuild switch --flake .#desktop` | Direct rebuild |
 | `nix build '.#nixosConfigurations.desktop.config.system.build.toplevel'` | Build only (no switch) |
-| `make switch` | Uses default NIXNAME=desktop |
+| `nh darwin switch . -H work` | Build and switch a Mac (or `-H laptop`) |
 
 ## Common Pitfalls Checklist
 
