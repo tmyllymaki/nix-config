@@ -3,7 +3,7 @@
 local wezterm = require 'wezterm'
 local module = {}
 
-local project_dir = wezterm.home_dir .. "/projects/git"
+local project_dir = os.getenv("PROJECTS_DIR") or (wezterm.home_dir .. "/dev")
 
 local function project_dirs()
   -- Start with your home directory as a project, 'cause you might want

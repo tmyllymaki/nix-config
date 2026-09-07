@@ -50,6 +50,11 @@ else
 end
 set -gx EDITOR nvim
 
+# Root for local git clones and the Obsidian vault. Overridable from the
+# environment; fish functions, tree-me and wezterm/projects.lua read these.
+set -q PROJECTS_DIR; or set -gx PROJECTS_DIR $HOME/dev
+set -q OBSIDIAN_VAULT; or set -gx OBSIDIAN_VAULT $HOME/Documents/work
+
 set -g fish_key_bindings fish_vi_key_bindings
 bind ctrl-e edit_command_buffer
 
@@ -145,7 +150,7 @@ end
 # set -gx TESTCONTAINERS_HOST_OVERRIDE (colima ls -j | jq -r '.address')
 
 function safe
-    safehouse --add-dirs-ro="$HOME/projects" $argv
+    safehouse --add-dirs-ro="$PROJECTS_DIR" $argv
 end
 
 # Sandboxed helpers without overriding the original binary names.
@@ -189,7 +194,7 @@ else
     alias paste 'xclip -o -selection clipboard'
 end
 alias cat bat
-alias gogit 'cd ~/git'
+alias gogit 'cd $PROJECTS_DIR'
 function '!!' --description 'Run last command from history'
     eval $history[1]
 end

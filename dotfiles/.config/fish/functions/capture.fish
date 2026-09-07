@@ -4,6 +4,6 @@ function capture --description "Append a task to Obsidian Tasks.md"
         return 1
     end
     set -l text (string join " " $argv)
-    echo "- [ ] $text" >> ~/projects/Obsidian/Work/Tasks.md
+    echo "- [ ] $text" >> $OBSIDIAN_VAULT/Tasks.md
     echo "Captured: $text"
 end

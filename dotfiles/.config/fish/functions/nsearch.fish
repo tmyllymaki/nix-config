@@ -4,5 +4,5 @@ function nsearch --description "Search Obsidian vault contents"
         return 1
     end
     set -l query (string join " " $argv)
-    rg --color=always -l "$query" ~/projects/Obsidian/Work/ --glob '*.md'
+    rg --color=always -l "$query" $OBSIDIAN_VAULT/ --glob '*.md'
 end

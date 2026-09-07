@@ -7,7 +7,7 @@ function zs --description "zmx session picker for projects"
     set -l output (
         begin
             zmx list --short 2>/dev/null | string replace -r '^(.+)$' '● $1  (active)'
-            ls -d ~/projects/git/*/ 2>/dev/null | xargs -n1 basename | string replace -r '^(.+)$' '○ $1'
+            ls -d $PROJECTS_DIR/*/ 2>/dev/null | xargs -n1 basename | string replace -r '^(.+)$' '○ $1'
         end | fzf \
             --print-query \
             --expect=ctrl-n \
@@ -33,7 +33,7 @@ function zs --description "zmx session picker for projects"
     end
 
     # If it matches a project dir, cd there first
-    set -l project_dir ~/projects/git/$session_name
+    set -l project_dir $PROJECTS_DIR/$session_name
     if test -d "$project_dir"
         cd $project_dir
     end

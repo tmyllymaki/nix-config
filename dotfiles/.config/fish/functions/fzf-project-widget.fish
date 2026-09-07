@@ -13,7 +13,7 @@ function _project_jump_get_icon
 end
 
 function _project_jump_format_project
-    set -l repo "$HOME/work/$argv[1]"
+    set -l repo "$PROJECTS_DIR/$argv[1]"
     set -l branch (git --work-tree $repo --git-dir $repo/.git branch --show-current)
     set_color --bold cyan
     echo -n "$argv[1]"
@@ -31,12 +31,12 @@ function _project_jump_parse_project
         return
     end
     set -l dir (string trim "$(string match -r ".*(?=\s*󰊢||)" "$selected")")
-    echo "$HOME/work/$dir"
+    echo "$PROJECTS_DIR/$dir"
 end
 
 function _project_jump_get_projects
-    for dir in (command ls "$HOME/work")
-        if test -d "$HOME/work/$dir"
+    for dir in (command ls "$PROJECTS_DIR")
+        if test -d "$PROJECTS_DIR/$dir"
             echo "$(_project_jump_format_project $dir)"
         end
     end

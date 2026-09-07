@@ -9,7 +9,7 @@
 set -e
 
 # Worktree organization: ~/dev/worktrees/<repo>/<branch>
-WORKTREE_ROOT="${WORKTREE_ROOT:-$HOME/dev/worktrees}"
+WORKTREE_ROOT="${WORKTREE_ROOT:-${PROJECTS_DIR:-$HOME/dev}/worktrees}"
 
 # Show help if no arguments
 show_help() {
