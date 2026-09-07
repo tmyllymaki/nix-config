@@ -15,6 +15,7 @@
       "microsoft-teams"
       "logi-options+"
       "linear"
+      "omniwm"
     ];
 
     # Enable system modules
@@ -23,7 +24,6 @@
       "homebrew"
       "defaults"
       "shell"
-      # "omniwm"
     ];
   };
 }

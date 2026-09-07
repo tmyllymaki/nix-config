@@ -23,7 +23,6 @@ modules/
   darwin/      darwin modules (defaults, homebrew, shell)
   helpers/     quickenable meta-toggle system
   shell/       shell tool modules (git)
-  wm/          window manager modules (omniwm)
   options/     flake option declarations
 machines/
   desktop/     NixOS (x86_64-linux) machine

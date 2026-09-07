@@ -19,7 +19,6 @@
       "homebrew"
       "defaults"
       "shell"
-      # "omniwm"
     ];
   };
 }
