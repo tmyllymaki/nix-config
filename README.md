@@ -1,134 +1,78 @@
+# nix-config
 
-  How the config works
+Nix configuration for my machines: one NixOS desktop and two Macs running
+nix-darwin. A single flake builds all of them and shares as much as possible
+between Linux and macOS.
 
-  The entry point: flake.nix
+| Machine   | System         | What it is                      |
+|-----------|----------------|---------------------------------|
+| `desktop` | x86_64-linux   | NixOS workstation (Plasma)      |
+| `laptop`  | aarch64-darwin | Personal MacBook Air            |
+| `work`    | aarch64-darwin | Work MacBook Pro                |
 
-  The flake uses flake-parts to avoid writing outputs by hand. The key mechanism is
-  import-tree - it recursively finds every .nix file under modules/, machines/, and
-  packages/, and imports them all as flake-parts modules. This means you never need to
-  manually register a new file - just create it and it's picked up.
+## Layout
 
-  imports = lib.flatten [
-    (import-tree ./modules)
-    (import-tree ./machines)
-    (import-tree ./packages)
-  ];
+```
+flake.nix        inputs + auto-import of everything below
+machines/        one directory per machine
+modules/
+  nixos/         NixOS system modules
+  darwin/        nix-darwin system modules
+  home/          user-level modules (hjem), shared by both OSes
+  shell/         shell tools (git, ...)
+  wm/            window manager settings
+  helpers/       the quickenable toggle helper
+packages/        custom packages not in nixpkgs
+dotfiles/        plain config files installed by the home modules
+lib/             small shared helpers
+```
 
-  Files prefixed with _ are ignored (useful for drafts or notes).
+## How it works
 
-  mkExtras is a helper that bundles things not available through normal pkgs - like
-  neovim-nightly from an overlay and your custom packages. It's passed to every module via
-  specialArgs.
+**Everything is auto-imported.** The flake uses flake-parts and imports every
+`.nix` file under `modules/`, `machines/` and `packages/`. Create a file and it
+is picked up; no registration step. Files prefixed with `_` are ignored.
 
-  Three module types
+**Modules are opt-in.** Each module registers itself in one bucket and guards
+its config behind an enable option:
 
-  Every module registers itself into one of three buckets:
+| Bucket                      | Scope                    | Enable option                 |
+|-----------------------------|--------------------------|-------------------------------|
+| `flake.nixosModules.X`      | NixOS system             | `custom.system.X.enable`      |
+| `flake.darwinModules.X`     | nix-darwin system        | `custom.system.X.enable`      |
+| `flake.hjemModules.X`       | user files, both OSes    | `custom.home.X.enable`        |
+| `flake.nixosMachineModules.X` | one machine's settings | (always applied to machine X) |
 
-  ┌─────────────────────────────┬───────────────────────────────────┬───────────────────────
-  ────────────────────────────────────────────────────────────┐
-  │           Bucket            │              Set by               │
-                 Purpose                                      │
-  ├─────────────────────────────┼───────────────────────────────────┼───────────────────────
-  ────────────────────────────────────────────────────────────┤
-  │ flake.darwinModules.X       │ darwin-specific system modules    │ Homebrew, macOS
-  defaults, system packages, OmniWM daemon                          │
-  ├─────────────────────────────┼───────────────────────────────────┼───────────────────────
-  ────────────────────────────────────────────────────────────┤
-  │ flake.hjemModules.X         │ user-level home config (portable) │ Git config, OmniWM
-  settings - works on both darwin and NixOS                      │
-  ├─────────────────────────────┼───────────────────────────────────┼───────────────────────
-  ────────────────────────────────────────────────────────────┤
-  │ flake.nixosMachineModules.X │ per-machine config                │ What makes your
-  machine yours - nix settings, which modules to enable, user setup │
-  └─────────────────────────────┴───────────────────────────────────┴───────────────────────
-  ────────────────────────────────────────────────────────────┘
+A machine turns modules on by listing their names:
 
-  modules/all.nix creates an aggregator for each bucket (darwinModules.all, hjemModules.all)
-   that imports every module of that type. This way the machine's default.nix can pull in
-  everything with one line.
+```nix
+custom.quickenable.system.modules = [ "base" "desktop" "gaming" ];
+custom.quickenable.hjem.modules   = [ "git" "fish" "wezterm" ];
+```
 
-  The enable pattern
+**User config uses hjem**, a lightweight alternative to home-manager. Home
+modules install packages and write files under `~/.config`; there is no
+`programs.*` layer. Because hjem runs on both NixOS and nix-darwin, the same
+home modules serve every machine.
 
-  Each module guards its config behind an option like custom.system.shell.enable or
-  custom.home.git.enable. Nothing activates until a machine explicitly enables it.
+**Each machine is three files.** `machines/<name>/default.nix` wires the flake
+output, `configuration.nix` holds system settings and the system module list,
+and `home/user.nix` defines the user and the home module list.
 
-  The quickenable helper is syntactic sugar. Instead of:
+## Usage
 
-  custom.system.homebrew.enable = true;
-  custom.system.defaults.enable = true;
-  custom.system.shell.enable = true;
-  custom.system.omniwm.enable = true;
+```sh
+make switch                 # rebuild the current machine (NIXNAME=desktop by default)
+make switch NIXNAME=work    # pick a machine explicitly
+make test                   # build and activate without making it the boot default
+nh os switch -H desktop     # on the NixOS desktop, if you prefer nh
+```
 
-  You write:
+New files must be `git add`ed before building; flakes only see tracked files.
 
-  custom.quickenable.system.modules = [
-    "homebrew" "defaults" "shell" "omniwm"
-  ];
+## Adding things
 
-  Same for hjem modules: custom.quickenable.hjem.modules = ["git" "omniwm"];
+- **System package on macOS:** `modules/darwin/shell.nix`. Homebrew casks: `modules/darwin/homebrew.nix`.
+- **New module:** copy any file in `modules/nixos/`, `modules/darwin/` or `modules/home/`, keep the enable-option pattern, then add its name to the machine's quickenable list.
+- **New machine:** copy a directory under `machines/`. Macs use `lib/mk-darwin.nix`; see `machines/desktop/default.nix` for the NixOS shape.
 
-  How a machine is assembled
-
-  machines/personal/default.nix is where everything gets wired together:
-
-  darwinSystem {
-    modules = [
-      darwinModules.all      # All system modules (gated by enable flags)
-      hjemModules.all        # All hjem modules (also gated)
-      nixosMachineModules.personal  # YOUR machine's config that flips those flags
-      hjem.darwinModules.default    # hjem's own plumbing
-      nix-homebrew.darwinModules.nix-homebrew  # nix-homebrew plumbing
-    ];
-  }
-
-  The machine-specific config is split across two files that both contribute to
-  nixosMachineModules.personal (they merge automatically):
-
-  - configuration.nix - System-level: nix settings, TouchID, homebrew taps, which modules to
-   enable
-  - home/user.nix - User-level: creates the tm user, sets up hjem, picks which hjem modules
-  to enable, user packages
-
-  Hjem
-
-  Hjem is a simpler alternative to home-manager. It manages user-level config files through
-  xdg.config.files. For example, the git module writes ~/.config/git/config:
-
-  xdg.config.files."git/config" = {
-    generator = lib.generators.toGitINI;
-    value = { user.name = "tmyllymaki"; ... };
-  };
-
-  The OmniWM hjem modules work the same way - each file (appearance.nix, binds.nix, etc.)
-  adds keys to xdg.config.files."omniwm/settings.json".value, and they all merge into one
-  JSON file. Hjem works on both darwin and NixOS, so these modules are portable.
-
-  Adding something new
-
-  - New system package: add it to the list in modules/darwin/shell.nix
-  - New homebrew cask/brew: add it to modules/darwin/homebrew.nix
-  - New darwin module: create modules/whatever/thing.nix, set flake.darwinModules.thing =
-  ... with an enable option, then add "thing" to your machine's quickenable list
-  - New hjem module: same pattern but flake.hjemModules.thing and custom.home.thing.enable
-  - New NixOS machine: create machines/mybox/ following the same three-file pattern, using
-  nixosSystem instead of darwinSystem, and import nixosModules.all instead of
-  darwinModules.all
-
-  Secrets and machine-local values
-
-  This repo is public. Nothing in it may contain a credential, and client or employer
-  identifiers stay out of it too. The conventions:
-
-  - Runtime secrets (API tokens, database passwords) are read from 1Password at the moment
-  they are needed, via `op read op://...`. See dotfiles/doom/config.el for the pattern.
-  - Shell-level secrets live in ~/.config/fish/secrets.fish, which is sourced if present
-  and is not tracked.
-  - Per-machine wezterm values (issue-tracker hyperlink rules, per-project tab layouts)
-  live in ~/.config/wezterm-local.lua, which wezterm.lua loads if present. The file returns
-  a table; see the comment near the top of dotfiles/wezterm/wezterm.lua for its shape.
-  - User login passwords are not in the config. users.mutableUsers is left at its default,
-  so after a fresh install set the password once with `passwd <user>` (from the installer
-  via `nixos-enter --root /mnt -c 'passwd tm'`, or as root on a console). It then persists
-  across rebuilds.
-  - If a system-level secret is ever needed at activation time, add agenix or sops-nix
-  rather than committing the value.
