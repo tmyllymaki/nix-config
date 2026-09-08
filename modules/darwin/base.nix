@@ -67,6 +67,7 @@
           "felixkratz/homebrew-formulae" = inputs.homebrew-tap-sketchybar;
           "johnsideserf/homebrew-siggy" = inputs.homebrew-tap-siggy;
           "junian/homebrew-dotnet" = inputs.homebrew-tap-dotnet;
+          "guria/homebrew-tap" = inputs.homebrew-tap-guria;
         };
         trust = {
           taps = [
@@ -79,6 +80,7 @@
             "felixkratz/homebrew-formulae"
             "johnsideserf/homebrew-siggy"
             "junian/homebrew-dotnet"
+            "guria/homebrew-tap"
           ];
         };
         mutableTaps = false;

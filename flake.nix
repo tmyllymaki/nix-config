@@ -67,6 +67,10 @@
       url = "github:junian/homebrew-dotnet";
       flake = false;
     };
+    homebrew-tap-guria = {
+      url = "github:guria/homebrew-tap";
+      flake = false;
+    };
 
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 

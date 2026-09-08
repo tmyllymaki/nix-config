@@ -69,6 +69,10 @@
             name = "junian/homebrew-dotnet";
             trusted = true;
           }
+          {
+            name = "guria/homebrew-tap";
+            trusted = true;
+          }
         ];
         brews =
           [
@@ -112,6 +116,7 @@
             "leader-key"
             "middleclick"
             "mos"
+            "nehir"
             "netnewswire"
             "obsidian"
             "omnidisksweeper"

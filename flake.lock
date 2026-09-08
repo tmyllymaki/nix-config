@@ -352,6 +352,22 @@
         "type": "github"
       }
     },
+    "homebrew-tap-guria": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786653846,
+        "narHash": "sha256-ueXHG0aCphl7lfltAvh4b13rI0TD3obscLzpyL5Brs4=",
+        "owner": "guria",
+        "repo": "homebrew-tap",
+        "rev": "a4e9881c9e5e17464a8162ffecbaf418f1fbca32",
+        "type": "github"
+      },
+      "original": {
+        "owner": "guria",
+        "repo": "homebrew-tap",
+        "type": "github"
+      }
+    },
     "homebrew-tap-nikita": {
       "flake": false,
       "locked": {
@@ -755,6 +771,7 @@
         "homebrew-core": "homebrew-core",
         "homebrew-qmk": "homebrew-qmk",
         "homebrew-tap-dotnet": "homebrew-tap-dotnet",
+        "homebrew-tap-guria": "homebrew-tap-guria",
         "homebrew-tap-nikita": "homebrew-tap-nikita",
         "homebrew-tap-siggy": "homebrew-tap-siggy",
         "homebrew-tap-sketchybar": "homebrew-tap-sketchybar",
