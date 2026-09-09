@@ -20,10 +20,10 @@
           ShowPathbar = true;
           QuitMenuItem = true;
           ShowSidebar = true;
-          ShowExternalHardDrivesOnDesktop = true;
+          ShowExternalHardDrivesOnDesktop = false;
           ShowHardDrivesOnDesktop = false;
           ShowMountedServersOnDesktop = false;
-          ShowRemovableMediaOnDesktop = true;
+          ShowRemovableMediaOnDesktop = false;
           _FXSortFoldersFirst = true;
           FXPreferredViewStyle = "Nlsv";
           FXDefaultSearchScope = "SCcf";
@@ -32,6 +32,10 @@
           NewWindowTarget = "PfLo";
           NewWindowTargetPath = "~/";
           WarnOnEmptyTrash = false;
+        };
+        "com.apple.WindowManager" = {
+          StandardHideDesktopIcons = true;
+          HideDesktop = true;
         };
         "com.apple.desktopservices" = {
           DSDontWriteNetworkStores = true;
