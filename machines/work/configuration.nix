@@ -16,6 +16,7 @@
       "logi-options+"
       "linear"
       "omniwm"
+      "claude"
     ];
 
     # Enable system modules
