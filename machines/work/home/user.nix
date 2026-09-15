@@ -8,6 +8,7 @@
     # users.users.<name> and hjem.users.<name>.directory come from
     # modules/options/user.nix; only per-machine app selection lives here.
     hjem.users.${config.custom.user.name} = {
+      custom.home.git.userName = "Timo Myllymäki";
       custom.home.git.userEmail = "timo.myllymaki@paretosoftware.fi";
 
       custom.quickenable.hjem.modules = [
