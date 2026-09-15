@@ -73,7 +73,9 @@
           fi
 
           echo "Linking Finner keyboard layout to ${targetPath}..."
-          $DRY_RUN_CMD ln -shf "${finnerPath}" "${targetPath}"
+          # -n, not -h: activation runs with Nix's GNU coreutils ahead of /bin,
+          # and GNU ln has no -h (BSD-only alias for -n).
+          $DRY_RUN_CMD ln -sfn "${finnerPath}" "${targetPath}"
         fi
       '';
     };

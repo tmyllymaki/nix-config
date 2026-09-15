@@ -86,7 +86,12 @@
       };
 
       files = {
-        ".config/fish/scripts/tree-me".source = fishDir + "/scripts/tree-me";
+        # clobber so a stray regular file (local edit, restore from backup, etc.)
+        # does not wedge the whole hjem activation, which is all-or-nothing.
+        ".config/fish/scripts/tree-me" = {
+          clobber = true;
+          source = fishDir + "/scripts/tree-me";
+        };
       };
     };
   };
