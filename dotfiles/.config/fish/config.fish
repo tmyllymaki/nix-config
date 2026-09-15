@@ -40,7 +40,8 @@ end
 set -gx TERM xterm-256color
 
 if test (uname) = Darwin
-    set -x DOTNET_ROOT /opt/homebrew/opt/dotnet/libexec
+    # Homebrew dotnet-sdk cask installs here (the formula path /opt/homebrew/opt/dotnet is not used).
+    set -x DOTNET_ROOT /usr/local/share/dotnet
 else if command -q dotnet
     # Nix: dotnet is a symlink into the store. Resolve it so framework-dependent
     # apphosts (dotnet tools like easy-dotnet's server) can find the runtime.
