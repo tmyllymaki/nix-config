@@ -19,6 +19,7 @@
       "homebrew"
       "defaults"
       "shell"
+      "paneru"
     ];
   };
 }
