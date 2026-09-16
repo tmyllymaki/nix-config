@@ -1,14 +1,14 @@
--- dotfiles/paneru/init.lua -- installed by modules/darwin/paneru.nix as paneru's
--- $PANERU_LUA, so paneru reads *only* this file: a paneru.toml beside it (or a
--- ~/.config/paneru/init.lua) is ignored entirely.
+-- dotfiles/paneru/init.lua -- symlinked to ~/.config/paneru/init.lua by
+-- modules/darwin/paneru.nix, which also installs paneru via Homebrew when
+-- custom.system.paneru is enabled on a machine. Editing it hot-reloads the
+-- running daemon; errors show up in
+-- /tmp/com.github.karinushka.paneru_501.err.log
 --
 -- Paneru config, ported from ~/.config/aerospace/aerospace.toml.
 --
--- The two bindings that used to live in
+-- NOTE: when this file exists Paneru reads *only* this file -- a paneru.toml
+-- sitting next to it is ignored entirely. The two bindings that used to live in
 -- paneru.toml (`alt - r` resize, `alt - c` center) are folded in below.
---
--- Editing this file needs a rebuild (`nh darwin switch . -H laptop`); errors
--- show up in /tmp/paneru.err.log
 
 paneru.setup {
 	default_workspaces = 7, -- aerospace uses workspaces 1-7

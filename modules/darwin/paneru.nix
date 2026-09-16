@@ -1,21 +1,27 @@
 {
   flake.darwinModules.paneru = {
     config,
-    inputs,
     lib,
     ...
   }: {
-    # Upstream's darwin module installs the package, passes dotfiles/paneru/init.lua
-    # in via `PANERU_LUA` and runs paneru as the primary user's launchd agent
-    # (it needs `system.primaryUser`, which modules/options/user.nix sets).
-    imports = [inputs.paneru.darwinModules.paneru];
-
     options.custom.system.paneru.enable = lib.mkEnableOption "system.paneru";
 
     config = lib.mkIf config.custom.system.paneru.enable {
-      services.paneru = {
-        enable = true;
-        config = ../../dotfiles/paneru/init.lua;
+      # Upstream ships a flake with a nix-darwin module (package + launchd agent),
+      # but that package builds paneru from source with crane and isn't in
+      # nixpkgs, so the formula stays the install path for now.
+      custom.system.homebrew.extraBrews = ["paneru"];
+
+      # paneru reads $XDG_CONFIG_HOME/paneru/init.lua, and an init.lua wins
+      # outright over any paneru.toml. hjem links that path at dotfiles/paneru,
+      # so edits here hot-reload the running daemon; enabling the module itself
+      # needs `nh darwin switch . -H <machine>`. The daemon that runs the brew
+      # binary is the hand-written
+      # ~/Library/LaunchAgents/com.github.karinushka.paneru.plist, which already
+      # sets XDG_CONFIG_HOME -- nothing here touches it.
+      hjem.users.${config.custom.user.name}.xdg.config.files."paneru/init.lua" = {
+        clobber = true;
+        source = ../../dotfiles/paneru/init.lua;
       };
     };
   };

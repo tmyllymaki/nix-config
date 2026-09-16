@@ -24,14 +24,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # macOS tiling window manager; ships its own nix-darwin module (package +
-    # init.lua + launchd agent) which modules/darwin/paneru.nix wraps.
-    paneru = {
-      url = "github:karinushka/paneru";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.nix-darwin.follows = "nix-darwin";
-    };
-
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     zen-browser = {
       url = "github:youwen5/zen-browser-flake";
