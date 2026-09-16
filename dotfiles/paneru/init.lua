@@ -32,6 +32,16 @@ paneru.setup {
 	decorations = {
 		-- the 1-second workspace-number toast shown on every switch
 		workspace_popup_status = false,
+
+		-- Focus cues: a thin border on the focused window plus native macOS
+		-- dimming of everything else. Set only `opacity` under `dim`; giving it
+		-- a `color` switches paneru to its own overlay mode instead.
+		active = {
+			border = { enabled = true, color = "#89b4fa", opacity = 1.0, width = 2.0, radius = "auto" },
+		},
+		inactive = {
+			dim = { opacity = -0.15, opacity_night = -0.25 }, -- negative darkens
+		},
 	},
 
 	swipe = {
@@ -89,32 +99,76 @@ bind(
 	"alt + shift + cmd + ctrl - downarrow"
 )
 
--- Deliberately *not* bound: paneru's README example uses cmd-h/cmd-l for focus,
--- which shadows Hide and "focus address bar" in every app.
---   bind("window focus west", "cmd - h")
---   bind("window focus east", "cmd - l")
+-- cmd-arrows also move focus. NOTE: these shadow cmd-left/right (start/end of
+-- line in text fields) in every app. cmd-hjkl is deliberately left unbound so
+-- cmd-l (address bar) and cmd-j/k keep working in apps.
+bind("window focus west", "cmd - leftarrow")
+bind("window focus east", "cmd - rightarrow")
+bind("window virtualfocus north", "cmd - uparrow")
+bind("window virtualfocus south", "cmd - downarrow")
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- Moving windows
--- Horizontal moves swap along the strip; vertical moves send the window to the
--- virtual workspace below/above and follow it. (aerospace `move left/right`
--- and `move up/down`.)
+-- Horizontal moves walk the strip (joining/leaving stacks on cmd-shift);
+-- vertical cmd-shift moves reorder inside a stack. alt-shift-j/k still send
+-- the window to the virtual workspace below/above and follow it.
 -- ─────────────────────────────────────────────────────────────────────────────
 
-bind("window swap west", "alt + shift - h", "cmd + shift - h", "cmd + shift - leftarrow")
-bind("window swap east", "alt + shift - l", "cmd + shift - l", "cmd + shift - rightarrow")
-bind(
-	"window virtualmove north",
-	"alt + shift - k",
-	"cmd + shift - k",
-	"cmd + shift - uparrow"
-)
-bind(
-	"window virtualmove south",
-	"alt + shift - j",
-	"cmd + shift - j",
-	"cmd + shift - downarrow"
-)
+-- Plain column swaps, the way aerospace moved windows.
+bind("window swap west", "alt + shift - h")
+bind("window swap east", "alt + shift - l")
+
+-- OmniWM/Nehir-style moves on the cmd-shift chords: moving a lone window into
+-- its neighbour joins that column as a stack, and moving a stacked window
+-- again pops it out of the stack on that side. Swapping two lone windows is
+-- therefore two presses (join, then leave on the far side).
+--
+-- Relies on how the daemon replays the ops: `stack` always merges a column
+-- onto the column to its LEFT (the `onto` argument only has to exist), and
+-- `unstack` always drops the window out on the RIGHT of the stack.
+local function column_of(ws, id)
+	local index = ws:column_of(id)
+	return index and ws:columns()[index] or {}
+end
+
+local function smart_move(direction)
+	return function(ws)
+		local id = ws:focused()
+		if not id then
+			return
+		end
+		local column = column_of(ws, id)
+		if #column > 1 then
+			local out = ws:unstack(id) -- lands east of the stack
+			if direction == "west" then
+				for _, other in ipairs(column) do
+					if other ~= id then
+						return out:swap(id, other) -- hop back over the stack
+					end
+				end
+			end
+			return out
+		end
+		if direction == "west" then
+			local west = ws:west(id)
+			return west and ws:stack(id, west) or nil -- join the column on the left
+		end
+		local east = ws:east(id)
+		return east and ws:stack(east, id) or nil -- pull the right column onto ours
+	end
+end
+
+paneru.bind("cmd + shift - h", smart_move("west"))
+paneru.bind("cmd + shift - leftarrow", smart_move("west"))
+paneru.bind("cmd + shift - l", smart_move("east"))
+paneru.bind("cmd + shift - rightarrow", smart_move("east"))
+-- Vertical cmd-shift moves reorder the window inside its stack (top <-> bottom),
+-- pairing with the horizontal smart moves below. Workspaces are only reached
+-- via cmd-N; moving a window to another row stays on alt-shift-j/k.
+bind("window swap north", "cmd + shift - k", "cmd + shift - uparrow")
+bind("window swap south", "cmd + shift - j", "cmd + shift - downarrow")
+bind("window virtualmove north", "alt + shift - k")
+bind("window virtualmove south", "alt + shift - j")
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- Workspaces (paneru virtual workspaces = rows, 1-7)
@@ -199,6 +253,7 @@ bind("mouse nextdisplay", "cmd + alt + shift - n")
 -- ─────────────────────────────────────────────────────────────────────────────
 
 paneru.bind("cmd + alt - h", function() end)
+paneru.bind("cmd - h", function() end) -- swallow Hide; too easy to hit by accident
 paneru.bind("cmd - tab", function() end)
 
 -- ─────────────────────────────────────────────────────────────────────────────
