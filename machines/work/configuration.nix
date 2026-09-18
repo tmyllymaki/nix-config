@@ -17,6 +17,7 @@
       "linear"
       "omniwm"
       "claude"
+      "microsoft-excel"
     ];
 
     # Enable system modules
