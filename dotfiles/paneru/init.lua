@@ -10,18 +10,18 @@
 -- sitting next to it is ignored entirely. The two bindings that used to live in
 -- paneru.toml (`alt - r` resize, `alt - c` center) are folded in below.
 
-paneru.setup {
+paneru.setup({
 	default_workspaces = 7, -- aerospace uses workspaces 1-7
 
 	options = {
-		focus_follows_mouse = true,
+		focus_follows_mouse = false,
 		mouse_follows_focus = true, -- closest thing to `move-mouse monitor-lazy-center`
 
 		-- Exponential ease-out decay rate for the strip/window movement and
 		-- resizes: t = 1 - e^(-rate*dt). UNSET means 1_000_000, i.e. an instant
 		-- snap with no animation -- that's the jarring jump. Suggested 8-20 for a
 		-- fluid feel; higher = snappier.
-		animation_speed = 16.0,
+		animation_speed = 60.0,
 
 		-- Virtual workspace (row) switches stay instant, matching the upstream
 		-- default -- no slow vertical slide on top of the horizontal strip
@@ -40,7 +40,7 @@ paneru.setup {
 			border = { enabled = true, color = "#89b4fa", opacity = 1.0, width = 2.0, radius = "auto" },
 		},
 		inactive = {
-			dim = { opacity = -0.15, opacity_night = -0.25 }, -- negative darkens
+			dim = { opacity = -0.05, opacity_night = -0.10 }, -- negative darkens
 		},
 	},
 
@@ -63,7 +63,7 @@ paneru.setup {
 		-- mouse/trackpad fallback: alt+scroll slides, alt+shift+scroll changes row
 		scroll = { modifier = "alt", vertical_modifier = "shift" },
 	},
-}
+})
 
 -- Binds one command to several chords (aerospace had the same action on both
 -- the letter keys and the arrow keys).
@@ -88,16 +88,8 @@ bind("window virtualfocus south", "alt - j")
 -- aerospace also had these on a four-modifier chord
 bind("window focus west", "alt + shift + cmd + ctrl - h", "alt + shift + cmd + ctrl - leftarrow")
 bind("window focus east", "alt + shift + cmd + ctrl - l", "alt + shift + cmd + ctrl - rightarrow")
-bind(
-	"window virtualfocus north",
-	"alt + shift + cmd + ctrl - k",
-	"alt + shift + cmd + ctrl - uparrow"
-)
-bind(
-	"window virtualfocus south",
-	"alt + shift + cmd + ctrl - j",
-	"alt + shift + cmd + ctrl - downarrow"
-)
+bind("window virtualfocus north", "alt + shift + cmd + ctrl - k", "alt + shift + cmd + ctrl - uparrow")
+bind("window virtualfocus south", "alt + shift + cmd + ctrl - j", "alt + shift + cmd + ctrl - downarrow")
 
 -- cmd-arrows also move focus. NOTE: these shadow cmd-left/right (start/end of
 -- line in text fields) in every app. cmd-hjkl is deliberately left unbound so
@@ -295,6 +287,19 @@ for bundle, workspace in pairs(app_workspaces) do
 		return ws:shift(event.window_id, workspace)
 	end)
 end
+
+-- 1Password: keep the main vault window tiled, float everything else the app
+-- opens (Quick Access is "Quick Access — 1Password"; unlock and browser
+-- authorisation prompts have similarly short titles). The main window is the
+-- only one titled "<account> — <collection> — 1Password", so anything without
+-- two separators floats. `ws:float` without a rect leaves the window where
+-- 1Password put it.
+paneru.on("window_spawned", { bundle = "com.1password.1password" }, function(event, ws)
+	if event.title:find(" — .* — 1Password$") then
+		return
+	end
+	return ws:float(event.window_id)
+end)
 
 -- aerospace had a second ghostty rule that also ran `layout floating`, which
 -- makes *every* window on workspace 1 float. Left out on purpose; uncomment if
