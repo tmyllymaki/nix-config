@@ -53,13 +53,21 @@
       programs.zsh.enable = true;
 
       system.activationScripts.postActivation.text = let
-        finnerPath = "${extras.mypkgs.finner-keyboard}/Finner.keylayout";
+        finnerPath = "${extras.mypkgs.finner-keyboard}/Finner.bundle";
         targetDir = "/Library/Keyboard Layouts";
-        targetPath = "${targetDir}/Finner.keylayout";
+        targetPath = "${targetDir}/Finner.bundle";
+        legacyPath = "${targetDir}/Finner.keylayout";
       in ''
-        if [ ! -f "${finnerPath}" ]; then
-          echo "Finner keyboard layout file not found at ${finnerPath}."
+        if [ ! -d "${finnerPath}" ]; then
+          echo "Finner keyboard layout bundle not found at ${finnerPath}."
           exit 1
+        fi
+
+        # The bare .keylayout from earlier generations has no language attached,
+        # so macOS keeps forcing the stock Finnish layout on. Remove it.
+        if [ -L "${legacyPath}" ]; then
+          echo "Removing legacy ${legacyPath}..."
+          $DRY_RUN_CMD rm -f "${legacyPath}"
         fi
 
         # Only relink when the store path actually changed, so a rebuild that
