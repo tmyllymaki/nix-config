@@ -169,20 +169,12 @@ bind("window virtualmove south", "alt + shift - j")
 -- paneru needs the follow spelled out, hence `virtualmovenum`.
 -- ─────────────────────────────────────────────────────────────────────────────
 
--- Switch workspace, remembering the one we came from so cmd-alt-tab can toggle
--- back. Only switches made with these keys (and the toggle itself) are tracked.
-local function goto_workspace(number)
-	return function(ws)
-		local current = ws:current()
-		if current ~= nil and current ~= number then
-			paneru.state.set("previous_workspace", current)
-		end
-		return ws:view(number)
-	end
-end
-
 for number = 1, 7 do
-	paneru.bind("cmd - " .. number, goto_workspace(number))
+	-- switch workspace (aerospace cmd-N). Kept as a plain command rather than
+	-- a Lua handler: Lua handlers need a layout snapshot from the window
+	-- server, which paneru 0.5.1 fails to build after a sleep/wake cycle
+	-- (stale space id), while plain commands keep working.
+	paneru.bind("cmd - " .. number, "window virtualnum " .. number)
 
 	-- move window to workspace N, and follow it (aerospace cmd-shift-N)
 	paneru.bind("cmd + shift - " .. number, "window virtualmovenum " .. number)
@@ -190,17 +182,6 @@ for number = 1, 7 do
 	-- move window to workspace N, but stay here
 	paneru.bind("cmd + alt + shift - " .. number, "window virtualsendnum " .. number)
 end
-
--- aerospace's `workspace-back-and-forth`
-paneru.bind("cmd + alt - tab", function(ws)
-	local previous = paneru.state.get("previous_workspace")
-	local current = ws:current()
-	if previous == nil or previous == current then
-		return
-	end
-	paneru.state.set("previous_workspace", current)
-	return ws:view(previous)
-end)
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- Size and layout
