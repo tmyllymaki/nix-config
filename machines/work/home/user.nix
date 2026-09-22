@@ -10,6 +10,7 @@
     hjem.users.${config.custom.user.name} = {
       custom.home.git.userName = "Timo Myllymäki";
       custom.home.git.userEmail = "timo.myllymaki@paretosoftware.fi";
+      custom.home.wezterm.theme = "kanso"; # or "kanagawa-paper" / "github"
 
       custom.quickenable.hjem.modules = [
         "git"

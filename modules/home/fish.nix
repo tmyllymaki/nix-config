@@ -80,6 +80,12 @@
         "fish/completions/w.fish" = mkSource "completions/w.fish";
         "fish/themes/carbonfox.fish" = mkSource "themes/carbonfox.fish";
         "fish/themes/dayfox.fish" = mkSource "themes/dayfox.fish";
+        "fish/themes/github-dark.fish" = mkSource "themes/github-dark.fish";
+        "fish/themes/github-light.fish" = mkSource "themes/github-light.fish";
+        "fish/themes/kanagawa-paper-canvas.fish" = mkSource "themes/kanagawa-paper-canvas.fish";
+        "fish/themes/kanagawa-paper-ink.fish" = mkSource "themes/kanagawa-paper-ink.fish";
+        "fish/themes/kanso-ink.fish" = mkSource "themes/kanso-ink.fish";
+        "fish/themes/kanso-pearl.fish" = mkSource "themes/kanso-pearl.fish";
         "fish/themes/modus_operandi.fish" = mkSource "themes/modus_operandi.fish";
         "fish/themes/modus_vivendi.fish" = mkSource "themes/modus_vivendi.fish";
         "fish/themes/tokyonight_moon.fish" = mkSource "themes/tokyonight_moon.fish";

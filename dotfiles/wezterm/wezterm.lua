@@ -47,60 +47,21 @@ config.term = "wezterm"
 
 local appearance = require("appearance")
 
-config.color_schemes = {
-	["dayfox"] = {
-		foreground = "#3d2b5a",
-		background = "#f6f2ee",
-		cursor_bg = "#3d2b5a",
-		cursor_border = "#3d2b5a",
-		cursor_fg = "#f6f2ee",
-		compose_cursor = "#955f61",
-		selection_bg = "#e7d2be",
-		selection_fg = "#3d2b5a",
-		scrollbar_thumb = "#824d5b",
-		split = "#e4dcd4",
-		visual_bell = "#3d2b5a",
-		ansi = { "#352c24", "#a5222f", "#396847", "#ac5402", "#2848a9", "#6e33ce", "#287980", "#f2e9e1" },
-		brights = { "#534c45", "#b3434e", "#577f63", "#b86e28", "#4863b6", "#8452d5", "#488d93", "#f4ece6" },
-		indexed = { [16] = "#a440b5", [17] = "#955f61" },
-		tab_bar = {
-			background = "#e4dcd4",
-			inactive_tab_edge = "#e4dcd4",
-			active_tab = { bg_color = "#824d5b", fg_color = "#f6f2ee" },
-			inactive_tab = { bg_color = "#dbd1dd", fg_color = "#643f61" },
-			inactive_tab_hover = { bg_color = "#d3c7bb", fg_color = "#3d2b5a" },
-			new_tab = { bg_color = "#f6f2ee", fg_color = "#643f61" },
-			new_tab_hover = { bg_color = "#d3c7bb", fg_color = "#3d2b5a" },
-		},
-	},
-	["carbonfox"] = {
-		foreground = "#f2f4f8",
-		background = "#161616",
-		cursor_bg = "#f2f4f8",
-		cursor_border = "#f2f4f8",
-		cursor_fg = "#161616",
-		compose_cursor = "#3ddbd9",
-		selection_bg = "#2a2a2a",
-		selection_fg = "#f2f4f8",
-		scrollbar_thumb = "#7b7c7e",
-		split = "#0c0c0c",
-		visual_bell = "#f2f4f8",
-		ansi = { "#282828", "#ee5396", "#25be6a", "#08bdba", "#78a9ff", "#be95ff", "#33b1ff", "#dfdfe0" },
-		brights = { "#484848", "#f16da6", "#46c880", "#2dc7c4", "#8cb6ff", "#c8a5ff", "#52bdff", "#e4e4e5" },
-		indexed = { [16] = "#ff7eb6", [17] = "#3ddbd9" },
-		tab_bar = {
-			background = "#0c0c0c",
-			inactive_tab_edge = "#0c0c0c",
-			active_tab = { bg_color = "#7b7c7e", fg_color = "#161616" },
-			inactive_tab = { bg_color = "#252525", fg_color = "#b6b8bb" },
-			inactive_tab_hover = { bg_color = "#353535", fg_color = "#f2f4f8" },
-			new_tab = { bg_color = "#161616", fg_color = "#b6b8bb" },
-			new_tab_hover = { bg_color = "#353535", fg_color = "#f2f4f8" },
-		},
-	},
-}
+-- Color theme family: explicit COLOR_THEME wins, then the file nix writes from
+-- custom.home.wezterm.theme, then the default. The resolved family is exported
+-- to child shells so fish and neovim pick the same palette.
+local theme_config = require("themes")
+local theme_family = theme_config.resolve_family(os.getenv("COLOR_THEME"), wezterm.home_dir .. "/.config/color-theme")
+config.set_environment_variables.COLOR_THEME = theme_family
 
-config.color_scheme = appearance.is_dark() and "carbonfox" or "dayfox"
+config.color_schemes = {}
+for name, scheme in pairs(theme_config.schemes) do
+	config.color_schemes[name] = theme_config.with_tab_bar(scheme)
+end
+
+-- WezTerm reloads this file whenever the system appearance changes.
+local theme_pair = theme_config.families[theme_family]
+config.color_scheme = appearance.is_dark() and theme_pair.dark or theme_pair.light
 local colors = config.color_schemes[config.color_scheme]
 config.colors = colors
 

@@ -2,7 +2,9 @@
 #fish_add_path $DOTNET_ROOT
 # Homebrew .NET on Apple Silicon
 
-# Light = themes/dayfox.fish, dark = themes/carbonfox.fish (matches wezterm + nvim)
+# Theme family comes from $COLOR_THEME (exported by wezterm), else the file nix
+# writes from custom.home.wezterm.theme, else kanso. Dark/light follows the OS.
+# Theme files live in themes/<family>-<variant>.fish; see dotfiles/wezterm/themes.lua.
 function setscheme
     if test -z "$argv"
         echo "Usage: setscheme <themename>"
@@ -25,16 +27,28 @@ function setscheme
     end
 end
 
-# setscheme tokyonight_moon
-# Mirror wezterm's appearance.is_dark() on macOS; Linux defaults to dark
-if test (uname) = Darwin
-    if test "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" = Dark
-        setscheme carbonfox
-    else
-        setscheme dayfox
+function color_theme_family
+    set -l family $COLOR_THEME
+    if test -z "$family"; and test -r ~/.config/color-theme
+        set family (string trim (head -n1 ~/.config/color-theme))
     end
+    switch "$family"
+        case kanso kanagawa-paper github
+            echo $family
+        case '*'
+            echo kanso
+    end
+end
+
+# Mirror wezterm's appearance.is_dark() on macOS; Linux defaults to dark
+set -l theme_family (color_theme_family)
+set -l theme_variants kanso-ink kanso-pearl kanagawa-paper-ink kanagawa-paper-canvas github-dark github-light
+set -l theme_dark (string match -r "^$theme_family-(ink|dark)\$" $theme_variants)[1]
+set -l theme_light (string match -r "^$theme_family-(pearl|canvas|light)\$" $theme_variants)[1]
+if test (uname) = Darwin; and test "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" != Dark
+    setscheme $theme_light
 else
-    setscheme carbonfox
+    setscheme $theme_dark
 end
 
 set -gx TERM xterm-256color
