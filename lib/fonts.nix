@@ -11,7 +11,7 @@
 # See: https://github.com/ahatem/IoskeleyMono/issues/19
 pkgs: let
   pythonWithFontTools = pkgs.python3.withPackages (ps: [ps.fonttools]);
-  ioskeley-mono-fixed = pkgs.ioskeley-mono.semiCondensed-term-NF.overrideAttrs (old: {
+  ioskeley-mono-fixed = (pkgs.ioskeley-mono.override {width = "SemiCondensed";}).term-nf.overrideAttrs (old: {
     nativeBuildInputs = (old.nativeBuildInputs or []) ++ [pythonWithFontTools];
     postInstall = (old.postInstall or "") + ''
       for f in "$out/share/fonts/"*/*.ttf; do
