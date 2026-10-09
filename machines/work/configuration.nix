@@ -19,6 +19,7 @@
       "omniwm"
       "claude"
       "microsoft-excel"
+      "zen"
       "d12frosted/emacs-plus/emacs-plus-app"
     ];
 
