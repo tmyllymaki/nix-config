@@ -65,8 +65,19 @@ config.color_scheme = appearance.is_dark() and theme_pair.dark or theme_pair.lig
 local colors = config.color_schemes[config.color_scheme]
 config.colors = colors
 
-config.font =
-	wezterm.font("IoskeleyMonoTerm Nerd Font Mono", { weight = "Medium", stretch = "SemiCondensed", style = "Normal" })
+-- Light text on a dark background looks heavier, so dark mode uses lighter weights.
+local font_weights = appearance.is_dark() and { normal = "DemiLight", bold = "DemiBold" }
+	or { normal = "Regular", bold = "Bold" }
+config.font = wezterm.font(
+	"IoskeleyMonoTerm Nerd Font Mono",
+	{ weight = font_weights.normal, stretch = "SemiCondensed", style = "Normal" }
+)
+config.font_rules = {
+	{
+		intensity = "Bold",
+		font = wezterm.font("IoskeleyMonoTerm Nerd Font Mono", { weight = font_weights.bold, stretch = "SemiCondensed" }),
+	},
+}
 -- config.font = wezterm.font("Iosevka Term SS03", { weight = "Medium" })
 config.font_size = 16
 config.line_height = 1.0
@@ -202,8 +213,8 @@ local function zmx_session_picker(window, pane)
 
 	-- Fetch zoxide dirs (and zmx session names when available)
 	local zmx_list_cmd = has_zmx
-			and ("echo '===SEP==='; ls -1 \"$TMPDIR/zmx-$(id -u)/\" 2>/dev/null | grep -v '^\\.\\|^logs$'")
-			or "echo '===SEP==='"
+			and "echo '===SEP==='; ls -1 \"$TMPDIR/zmx-$(id -u)/\" 2>/dev/null | grep -v '^\\.\\|^logs$'"
+		or "echo '===SEP==='"
 	local _, combined_stdout = wezterm.run_child_process({
 		"/bin/sh",
 		"-c",
