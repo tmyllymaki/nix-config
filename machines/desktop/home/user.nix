@@ -29,6 +29,7 @@
 
       custom.quickenable.hjem.modules = [
         "git"
+        "ssh"
         "base"
         "desktop"
         "plasma"

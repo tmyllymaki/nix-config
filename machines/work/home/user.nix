@@ -14,6 +14,7 @@
 
       custom.quickenable.hjem.modules = [
         "git"
+        "ssh"
         "mpv"
         "llm-agents"
         "raycast"

@@ -55,10 +55,6 @@
           prefix=''${HOME}/.npm-packages
           cache=''${HOME}/.cache/npm
         '';
-        ".ssh/config".text = ''
-          Host *
-            IdentityAgent ~/.1password/agent.sock
-        '';
       };
     };
   };

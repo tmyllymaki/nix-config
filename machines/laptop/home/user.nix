@@ -5,6 +5,7 @@
     hjem.users.${config.custom.user.name} = {
       custom.quickenable.hjem.modules = [
         "git"
+        "ssh"
         "mpv"
         "llm-agents"
         "raycast"
