@@ -40,6 +40,9 @@
             enabled = true;
             autoUpdate = true;
           };
+          # Unmanaged per-machine overrides, such as includeIf blocks for
+          # customer directories. git skips the include if the file is missing.
+          include.path = "~/.config/git/local";
         };
       };
     };
