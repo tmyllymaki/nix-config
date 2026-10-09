@@ -29,10 +29,15 @@
 ;; refresh your font settings. If Emacs still can't find your font, it likely
 ;; wasn't installed correctly. Font issues are rarely Doom issues!
 ;;
-(setq doom-font (font-spec :family "IoskeleyMonoTerm Nerd Font Mono SemiCondensed Medium" :size 15))
+;; The family name excludes the width and weight; SemiCondensed is the only
+;; width installed, so it needs no mention.
+(setq doom-font (font-spec :family "IoskeleyMonoTerm Nerd Font Mono" :size 14))
 
-(face-attribute 'default :font)
-
+;; Doom makes Option the Meta key. Leave it to macOS so Option+2 types `@' on
+;; the Finnish layout; Meta is still reachable through ESC.
+(when (featurep :system 'macos)
+  (setq mac-option-modifier 'none
+        ns-option-modifier 'none))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
@@ -406,7 +411,7 @@ Return nil for JSON null, (vector) for JSON []."
 
 ;; vterm kept as a fallback; reach it via M-x +vterm/toggle.
 (after! vterm
-  (setq vterm-shell "/opt/homebrew/bin/fish")
+  (setq vterm-shell (executable-find "fish"))
   (set-popup-rule! "^\\*doom:vterm" :side 'bottom :size 0.4 :select t
     :quit nil :ttl nil :modeline t))
 
@@ -419,12 +424,21 @@ a new one (in the project root when inside a project)."
   (interactive)
   (require 'ghostel)
   (if (project-current nil)
-      (let* ((bufs (ghostel--project-buffers))
+      ;; Match by identity only: the default scope also matches any
+      ;; ghostel-mode buffer in the project directory, which includes the
+      ;; claude-code-ide terminal.
+      (let* ((bufs (let ((ghostel-project-buffer-scope 'identity))
+                     (ghostel-project-buffer-list)))
              (win  (seq-some #'get-buffer-window bufs)))
         (cond (win  (delete-window win))
               (bufs (pop-to-buffer (car bufs)))
               (t    (ghostel-project))))
-    (let* ((buf (ghostel--find-buffer-by-identity ghostel-buffer-name))
+    ;; Subset match: ghostel adds an `instance' key to the stored identity.
+    (let* ((pattern `((kind . term) (name . ,ghostel-buffer-name)))
+           (buf (seq-find (lambda (b)
+                            (ghostel-identity-match-p
+                             pattern (buffer-local-value 'ghostel-identity b)))
+                          (ghostel-buffer-list)))
            (win (and buf (get-buffer-window buf))))
       (cond (win (delete-window win))
             (buf (pop-to-buffer buf))
@@ -437,7 +451,7 @@ a new one (in the project root when inside a project)."
   ;; not in the ghostel package).
   :commands (ghostel ghostel-project ghostel-other)
   :init
-  (setq ghostel-shell "/opt/homebrew/bin/fish")
+  (setq ghostel-shell (executable-find "fish"))
   ;; Keep stable buffer names (*ghostel*, *<project>-ghostel*) so the popup
   ;; rule keeps matching after the shell sets a window title.  Set back to
   ;; #'ghostel-buffer-name-by-title to restore dynamic title-based names.
@@ -702,7 +716,7 @@ when :dbconnection is used and :dbpassword is missing."
   :commands (claude-code-ide claude-code-ide-toggle claude-code-ide-menu
              claude-code-ide-continue claude-code-ide-resume)
   :init
-  (setq claude-code-ide-cli-path (expand-file-name "~/.local/bin/sandboxed-claude"))
+  (setq claude-code-ide-cli-path "claude")
   (setq claude-code-ide-terminal-backend 'ghostel)
 
   :config
