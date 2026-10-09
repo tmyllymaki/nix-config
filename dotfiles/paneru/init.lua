@@ -227,7 +227,7 @@ bind("mouse nextdisplay", "cmd + alt + shift - n")
 
 paneru.bind("cmd + alt - h", function() end)
 paneru.bind("cmd - h", function() end) -- swallow Hide; too easy to hit by accident
-paneru.bind("cmd - tab", function() end)
+-- paneru.bind("cmd - tab", function() end)
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- Paneru extras -- nothing in aerospace maps to these, delete freely.
