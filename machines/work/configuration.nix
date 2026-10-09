@@ -19,6 +19,7 @@
       "omniwm"
       "claude"
       "microsoft-excel"
+      "d12frosted/emacs-plus/emacs-plus-app"
     ];
 
     # Enable system modules

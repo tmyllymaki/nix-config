@@ -71,6 +71,10 @@
       url = "github:guria/homebrew-tap";
       flake = false;
     };
+    homebrew-tap-emacs-plus = {
+      url = "github:d12frosted/homebrew-emacs-plus";
+      flake = false;
+    };
 
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 

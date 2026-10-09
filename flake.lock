@@ -352,6 +352,22 @@
         "type": "github"
       }
     },
+    "homebrew-tap-emacs-plus": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1790739264,
+        "narHash": "sha256-dR7NumTtlSdh9EhwnFmCAHJDRnZJyo5XNqti34WB5N4=",
+        "owner": "d12frosted",
+        "repo": "homebrew-emacs-plus",
+        "rev": "25123e7b19ee93d61956ef3c83341d51d0a77d33",
+        "type": "github"
+      },
+      "original": {
+        "owner": "d12frosted",
+        "repo": "homebrew-emacs-plus",
+        "type": "github"
+      }
+    },
     "homebrew-tap-guria": {
       "flake": false,
       "locked": {
@@ -771,6 +787,7 @@
         "homebrew-core": "homebrew-core",
         "homebrew-qmk": "homebrew-qmk",
         "homebrew-tap-dotnet": "homebrew-tap-dotnet",
+        "homebrew-tap-emacs-plus": "homebrew-tap-emacs-plus",
         "homebrew-tap-guria": "homebrew-tap-guria",
         "homebrew-tap-nikita": "homebrew-tap-nikita",
         "homebrew-tap-siggy": "homebrew-tap-siggy",

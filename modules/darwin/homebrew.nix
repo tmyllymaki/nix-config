@@ -73,6 +73,10 @@
             name = "guria/homebrew-tap";
             trusted = true;
           }
+          {
+            name = "d12frosted/homebrew-emacs-plus";
+            trusted = true;
+          }
         ];
         brews =
           [
