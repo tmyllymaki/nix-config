@@ -12,6 +12,7 @@
     ];
 
     custom.system.homebrew.extraCasks = [
+      "arc"
       "google-chrome"
       "microsoft-teams"
       "logi-options+"
