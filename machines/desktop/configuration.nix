@@ -20,6 +20,7 @@
       "desktop"
       "gaming"
       "hibernate"
+      "keyd"
       "nfs"
       "plasma"
       "secureboot"

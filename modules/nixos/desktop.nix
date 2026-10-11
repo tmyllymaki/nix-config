@@ -51,7 +51,9 @@
         };
         layout = "finner";
         variant = "custom";
-        options = "caps:escape";
+        # Caps Lock -> hyper (Ctrl+Alt+Shift+Meta) with tap = Escape is handled
+        # by keyd (modules/nixos/keyd.nix); an X11 `caps:escape` option here is
+        # a no-op once keyd owns the physical Caps Lock key.
       };
 
       security.pam.services.swaylock = {};
