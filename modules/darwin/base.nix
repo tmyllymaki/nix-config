@@ -57,6 +57,13 @@
       nix-homebrew = {
         enable = true;
         enableRosetta = true;
+        # nix-homebrew pins brew to a release tag that lags the unpinned
+        # homebrew-core input; newer formulae then fail to parse. Track a
+        # newer tag here (keep in sync with flake.nix) until upstream catches up.
+        package = inputs.brew-src // {
+          name = "brew-7.0.9";
+          version = "7.0.9";
+        };
         taps = {
           "homebrew/homebrew-core" = inputs.homebrew-core;
           "homebrew/homebrew-cask" = inputs.homebrew-cask;
