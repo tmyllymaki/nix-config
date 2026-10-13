@@ -49,6 +49,10 @@
           tilesize = 36;
           show-recents = false;
           show-process-indicators = true;
+          # dinky maps workspaces to native Spaces and handles Cmd-Tab itself;
+          # macOS reordering Spaces or swooshing to them on app switch fights it.
+          mru-spaces = false;
+          workspaces-auto-swoosh = false;
         };
         "com.apple.activitymonitor" = {
           OpenInMainWindow = true;

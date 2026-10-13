@@ -75,6 +75,10 @@
       url = "github:d12frosted/homebrew-emacs-plus";
       flake = false;
     };
+    homebrew-tap-mikker = {
+      url = "github:mikker/homebrew-tap";
+      flake = false;
+    };
 
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 

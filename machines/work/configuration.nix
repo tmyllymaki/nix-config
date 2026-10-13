@@ -19,6 +19,7 @@
       "logi-options+"
       "linear"
       "omniwm"
+      "mikker/tap/dinky"
       "claude"
       "microsoft-excel"
       "zen"

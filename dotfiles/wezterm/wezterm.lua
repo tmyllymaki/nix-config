@@ -84,7 +84,9 @@ config.line_height = 1.0
 
 config.window_background_opacity = 1
 config.macos_window_background_blur = 30
-config.window_decorations = "RESIZE"
+-- Square corners: dinky draws its border square around this titlebar-less
+-- window, which leaves gaps at the rounded corners macOS gives it.
+config.window_decorations = "RESIZE|MACOS_FORCE_SQUARE_CORNERS"
 
 local function move_pane(key, direction)
 	return {

@@ -77,6 +77,10 @@
             name = "d12frosted/homebrew-emacs-plus";
             trusted = true;
           }
+          {
+            name = "mikker/homebrew-tap";
+            trusted = true;
+          }
         ];
         brews =
           [

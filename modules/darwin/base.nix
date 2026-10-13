@@ -69,6 +69,7 @@
           "junian/homebrew-dotnet" = inputs.homebrew-tap-dotnet;
           "guria/homebrew-tap" = inputs.homebrew-tap-guria;
           "d12frosted/homebrew-emacs-plus" = inputs.homebrew-tap-emacs-plus;
+          "mikker/homebrew-tap" = inputs.homebrew-tap-mikker;
         };
         trust = {
           taps = [
@@ -83,6 +84,7 @@
             "junian/homebrew-dotnet"
             "guria/homebrew-tap"
             "d12frosted/homebrew-emacs-plus"
+            "mikker/homebrew-tap"
           ];
         };
         mutableTaps = false;

@@ -1,0 +1,153 @@
+#:schema https://dinky.rodeo/schemas/dinky.json
+# Ported from dotfiles/aerospace/aerospace.toml.
+# Every key and command: https://dinky.rodeo/configuration/
+# Check edits with `dinky doctor --config dotfiles/dinky/dinky.toml`.
+
+# Off while AeroSpace and Paneru still start at login; dinky refuses to run
+# alongside another tiling window manager. Flip once dinky is the one.
+start-at-login = false
+workspaces = 7
+default-layout = 'tiles'
+float-windows-without-fullscreen = true 
+follow-app-activation = true
+default-tiling = true
+
+[accordion]
+padding = 5
+orientation = 'auto'
+
+# The border is drawn outside the window's frame, so it needs a gap to show:
+# with no gaps, neighbours cover it and the screen edge cuts it off.
+[gaps]
+inner = 6
+outer = 4
+
+[scrolling]
+column-width = 0.49             # a new column's share of the display; a lone column fills it
+
+[borders]
+enabled = true
+width = 2
+# active-color = '#89b4fa'        # '#rrggbb' or '#rrggbbaa'
+# inactive-color = '#494d64'
+active-color = '#2f81f7'
+inactive-color = '#00000000'    # transparent: only the focused window gets a ring
+order = 'below'                 # below | above (a click-through ring over the window)
+exclude-apps = []               # bundle IDs whose windows get no border
+
+[animations]
+enabled = true                  # windows glide to their tiles; off while Reduce Motion is on
+duration-ms = 150               # roughly how long a window takes to arrive
+
+[drag]
+placeholders = true             # outline where a dragged tile came from and the tile it will swap with
+
+[workspace-to-display]
+5 = 'secondary'                 # falls back to the main display
+6 = 'secondary'
+
+[[rules]]
+app-id = 'com.apple.systempreferences'
+run = 'layout floating'
+
+[[rules]]
+app-id = 'com.jetbrains.rider'
+run = 'move-window-to-workspace 1'
+
+[[rules]]
+app-id = 'com.github.wez.wezterm'
+run = 'move-window-to-workspace 1'
+
+[[rules]]
+app-id = 'com.mitchellh.ghostty'
+run = ['layout floating', 'move-window-to-workspace 1']
+
+[[rules]]
+app-id = 'app.zen-browser.zen'
+run = 'move-window-to-workspace 2'
+
+[[rules]]
+app-id = 'com.tinyspeck.slackmacgap'
+run = 'move-window-to-workspace 3'
+
+[[rules]]
+app-id = 'com.microsoft.teams2'
+run = 'move-window-to-workspace 3'
+
+[[rules]]
+app-id = 'org.whispersystems.signal-desktop'
+run = 'move-window-to-workspace 3'
+
+[[rules]]
+app-id = 'com.spotify.client'
+run = 'move-window-to-workspace 4'
+
+[mode.main]
+cmd-shift-m = 'layout h_tiles v_tiles'           # tiles; again flips orientation
+cmd-shift-n = 'layout tiles accordion scrolling'
+cmd-shift-f = 'layout floating tiles'
+
+alt-shift-cmd-ctrl-h = 'focus left --boundaries-action wrap-around-the-workspace'
+alt-shift-cmd-ctrl-j = 'focus down --boundaries-action wrap-around-the-workspace'
+alt-shift-cmd-ctrl-k = 'focus up --boundaries-action wrap-around-the-workspace'
+alt-shift-cmd-ctrl-l = 'focus right --boundaries-action wrap-around-the-workspace'
+alt-shift-cmd-ctrl-left = 'focus left --boundaries-action wrap-around-the-workspace'
+alt-shift-cmd-ctrl-down = 'focus down --boundaries-action wrap-around-the-workspace'
+alt-shift-cmd-ctrl-up = 'focus up --boundaries-action wrap-around-the-workspace'
+alt-shift-cmd-ctrl-right = 'focus right --boundaries-action wrap-around-the-workspace'
+
+cmd-shift-h = 'move left'
+cmd-shift-j = 'move down'
+cmd-shift-k = 'move up'
+cmd-shift-l = 'move right'
+cmd-shift-left = 'move left'
+cmd-shift-down = 'move down'
+cmd-shift-up = 'move up'
+cmd-shift-right = 'move right'
+
+cmd-0 = 'resize smart -50'
+cmd-9 = 'resize smart +50'
+cmd-m = 'fullscreen'
+
+cmd-1 = 'workspace 1'
+cmd-2 = 'workspace 2'
+cmd-3 = 'workspace 3'
+cmd-4 = 'workspace 4'
+cmd-5 = 'workspace 5'
+cmd-6 = 'workspace 6'
+cmd-7 = 'workspace 7'
+
+cmd-shift-1 = 'move-window-to-workspace 1 --follow'
+cmd-shift-2 = 'move-window-to-workspace 2 --follow'
+cmd-shift-3 = 'move-window-to-workspace 3 --follow'
+cmd-shift-4 = 'move-window-to-workspace 4 --follow'
+cmd-shift-5 = 'move-window-to-workspace 5 --follow'
+cmd-shift-6 = 'move-window-to-workspace 6 --follow'
+cmd-shift-7 = 'move-window-to-workspace 7 --follow'
+
+cmd-alt-tab = 'workspace-back-and-forth'
+# AeroSpace moved the whole workspace; dinky can only move the window.
+cmd-alt-n = 'move-window-to-display next'
+
+alt-i = ['layout floating', "exec-and-forget sleep 0.2 && open -g 'raycast://extensions/raycast/window-management/center'"]
+
+cmd-shift-comma = 'mode service'
+alt-shift-c = 'reload-config'
+
+[mode.service]
+esc = ['reload-config', 'mode main']
+r = ['flatten-workspace-tree', 'mode main']
+f = ['layout floating tiling', 'mode main']
+v = 'layout v_accordion'
+u = 'layout h_accordion'
+t = 'layout tiling'
+x = ['join-with right', 'layout v_accordion', 'mode main']
+
+cmd-shift-h = 'join-with left'
+cmd-shift-j = 'join-with down'
+cmd-shift-k = 'join-with up'
+cmd-shift-l = 'join-with right'
+
+down = "exec-and-forget osascript -e 'set volume output volume ((output volume of (get volume settings)) - 6)'"
+up = "exec-and-forget osascript -e 'set volume output volume ((output volume of (get volume settings)) + 6)'"
+shift-down = ["exec-and-forget osascript -e 'set volume output volume 0'", 'mode main']
