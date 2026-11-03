@@ -22,6 +22,7 @@ font-size = 16
 # mouse-scroll-multiplier = 0.5
 
 # window-decoration = false
+macos-titlebar-style = tabs
 # window-padding-x = 8
 # window-padding-y = 8
 
@@ -38,6 +39,32 @@ keybind = ctrl+,=unbind
 # keybind = cmd+d=unbind
 # keybind = cmd+opt+left=unbind
 # keybind = cmd+opt+right=unbind
+
+# Switch tabs with ctrl+1-9; cmd+1-9 is reserved for the window manager
+keybind = super+one=unbind
+keybind = super+two=unbind
+keybind = super+three=unbind
+keybind = super+four=unbind
+keybind = super+five=unbind
+keybind = super+six=unbind
+keybind = super+seven=unbind
+keybind = super+eight=unbind
+keybind = super+nine=unbind
+keybind = ctrl+one=goto_tab:1
+keybind = ctrl+two=goto_tab:2
+keybind = ctrl+three=goto_tab:3
+keybind = ctrl+four=goto_tab:4
+keybind = ctrl+five=goto_tab:5
+keybind = ctrl+six=goto_tab:6
+keybind = ctrl+seven=goto_tab:7
+keybind = ctrl+eight=goto_tab:8
+keybind = ctrl+nine=last_tab
+
+# Agentflow keybinds
+keybind = cmd+p=csi:24601~
+keybind = cmd+o=csi:24602~
+keybind = cmd+i=csi:24603~
+keybind = cmd+j=csi:24604~
 
 # Make ctrl + tab to switch to the next tab
 # keybind = ctrl+tab=text:\x1b[9;5u
