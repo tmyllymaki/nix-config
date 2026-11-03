@@ -107,7 +107,8 @@ cmd-shift-right = 'move right'
 
 cmd-0 = 'resize smart -50'
 cmd-9 = 'resize smart +50'
-cmd-m = 'fullscreen'
+cmd-shift-0 = 'balance-sizes'
+cmd-m = 'exec-and-forget ~/.config/dinky/maximize-toggle'  # niri-style maximize; fullscreen ends on focus change
 
 cmd-1 = 'workspace 1'
 cmd-2 = 'workspace 2'
