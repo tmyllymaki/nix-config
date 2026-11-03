@@ -15,7 +15,9 @@ paneru.setup({
 
 	options = {
 		focus_follows_mouse = false,
-		mouse_follows_focus = true, -- closest thing to `move-mouse monitor-lazy-center`
+		-- Off because paneru also warps the cursor on click-to-focus, with no
+		-- option to limit the warp to keyboard focus changes.
+		mouse_follows_focus = false,
 
 		-- Exponential ease-out decay rate for the strip/window movement and
 		-- resizes: t = 1 - e^(-rate*dt). UNSET means 1_000_000, i.e. an instant
@@ -33,11 +35,11 @@ paneru.setup({
 		-- the 1-second workspace-number toast shown on every switch
 		workspace_popup_status = false,
 
-		-- Focus cues: a thin border on the focused window plus native macOS
-		-- dimming of everything else. Set only `opacity` under `dim`; giving it
-		-- a `color` switches paneru to its own overlay mode instead.
+		-- Focus cue: native macOS dimming of every window except the focused
+		-- one. Set only `opacity` under `dim`; giving it a `color` switches
+		-- paneru to its own overlay mode instead.
 		active = {
-			border = { enabled = true, color = "#89b4fa", opacity = 1.0, width = 2.0, radius = "auto" },
+			border = { enabled = false },
 		},
 		inactive = {
 			dim = { opacity = -0.05, opacity_night = -0.10 }, -- negative darkens
@@ -76,28 +78,29 @@ end
 -- ─────────────────────────────────────────────────────────────────────────────
 -- Navigation / focus
 -- alt-hjkl is aerospace's own focus scheme; h/l walk the strip, j/k move
--- between windows in a stack and fall through to the virtual workspace below
--- or above when there is nothing left to focus that way.
+-- between windows in a stack (or cycle its tabs). Plain `focus` rather than
+-- `virtualfocus`, so j/k never fall through to another virtual workspace at
+-- the top or bottom of a stack; workspaces are reached via cmd-N only.
 -- ─────────────────────────────────────────────────────────────────────────────
 
 bind("window focus west", "alt - h")
 bind("window focus east", "alt - l")
-bind("window virtualfocus north", "alt - k")
-bind("window virtualfocus south", "alt - j")
+bind("window focus north", "alt - k")
+bind("window focus south", "alt - j")
 
 -- aerospace also had these on a four-modifier chord
 bind("window focus west", "alt + shift + cmd + ctrl - h", "alt + shift + cmd + ctrl - leftarrow")
 bind("window focus east", "alt + shift + cmd + ctrl - l", "alt + shift + cmd + ctrl - rightarrow")
-bind("window virtualfocus north", "alt + shift + cmd + ctrl - k", "alt + shift + cmd + ctrl - uparrow")
-bind("window virtualfocus south", "alt + shift + cmd + ctrl - j", "alt + shift + cmd + ctrl - downarrow")
+bind("window focus north", "alt + shift + cmd + ctrl - k", "alt + shift + cmd + ctrl - uparrow")
+bind("window focus south", "alt + shift + cmd + ctrl - j", "alt + shift + cmd + ctrl - downarrow")
 
 -- cmd-arrows also move focus. NOTE: these shadow cmd-left/right (start/end of
 -- line in text fields) in every app. cmd-hjkl is deliberately left unbound so
 -- cmd-l (address bar) and cmd-j/k keep working in apps.
 bind("window focus west", "cmd - leftarrow")
 bind("window focus east", "cmd - rightarrow")
-bind("window virtualfocus north", "cmd - uparrow")
-bind("window virtualfocus south", "cmd - downarrow")
+bind("window focus north", "cmd - uparrow")
+bind("window focus south", "cmd - downarrow")
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- Moving windows
@@ -107,8 +110,8 @@ bind("window virtualfocus south", "cmd - downarrow")
 -- ─────────────────────────────────────────────────────────────────────────────
 
 -- Plain column swaps, the way aerospace moved windows.
-bind("window swap west", "alt + shift - h")
-bind("window swap east", "alt + shift - l")
+bind("window swap west", "cmd + shift - h")
+bind("window swap east", "cmd + shift - l")
 
 -- OmniWM/Nehir-style moves on the cmd-shift chords: moving a lone window into
 -- its neighbour joins that column as a stack, and moving a stacked window
@@ -159,8 +162,8 @@ paneru.bind("cmd + shift - rightarrow", smart_move("east"))
 -- via cmd-N; moving a window to another row stays on alt-shift-j/k.
 bind("window swap north", "cmd + shift - k", "cmd + shift - uparrow")
 bind("window swap south", "cmd + shift - j", "cmd + shift - downarrow")
-bind("window virtualmove north", "alt + shift - k")
-bind("window virtualmove south", "alt + shift - j")
+bind("window virtualmove north", "cmd + shift - k")
+bind("window virtualmove south", "cmd + shift - j")
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- Workspaces (paneru virtual workspaces = rows, 1-7)
@@ -237,50 +240,91 @@ bind("window swap north", "ctrl + alt - k") -- reorder inside a stack
 bind("window swap south", "ctrl + alt - j")
 bind("window swap first", "ctrl + alt - h")
 bind("window swap last", "ctrl + alt - l")
-bind("window stack", "ctrl + alt - s") -- stack onto the column on the left
-bind("window unstack", "ctrl + alt + shift - s")
+-- Toggle the focused stack between split and tabbed display (one window
+-- visible at a time, cycled with alt-j/k). Stacking itself is done with the
+-- cmd-shift-h/l smart moves.
+bind("window tabbeddisplay", "cmd + ctrl - s")
+bind("window unstack", "cmd + ctrl + shift - s")
 bind("window equalize", "ctrl + alt - e") -- equal heights within a stack
-bind("window balance", "ctrl + alt - b") -- equal widths across the strip
+bind("window balance", "cmd + ctrl - b") -- equal widths across the strip
 bind("window snap", "ctrl + alt - n") -- pull an overflowing window into view
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- App -> workspace rules, ported from aerospace's [[on-window-detected]].
 -- paneru has no `[windows]` rule for this, so they run on window_spawned.
 -- Like `move-node-to-workspace`, these do not follow the window.
+--
+-- The same table drives the bootstrap below, which re-applies it to every
+-- window already open. `full_width` is applied by the bootstrap only, so new
+-- windows keep their default width.
 -- ─────────────────────────────────────────────────────────────────────────────
 
+-- 1Password's main vault window is the only one titled
+-- "<account> — <collection> — 1Password"; Quick Access, unlock and browser
+-- authorisation prompts have a single separator.
+local onepassword_main = " — .* — 1Password$"
+
 local app_workspaces = {
-	["com.jetbrains.rider"] = 1,
-	["com.github.wez.wezterm"] = 1,
-	["com.mitchellh.ghostty"] = 1,
-	["app.zen-browser.zen"] = 2,
-	["com.tinysleak.slackmacgap"] = 3,
-	["com.microsoft.teams2"] = 3,
-	["org.whispersystems.signal-desktop"] = 3,
-	["com.spotify.client"] = 4,
+	["com.jetbrains.rider"] = { workspace = 1 },
+	["com.github.wez.wezterm"] = { workspace = 1 },
+	["com.mitchellh.ghostty"] = { workspace = 1, full_width = true },
+	["app.zen-browser.zen"] = { workspace = 2 },
+	["com.vivaldi.Vivaldi"] = { workspace = 2, full_width = true },
+	["com.tinyspeck.slackmacgap"] = { workspace = 3 },
+	["com.microsoft.teams2"] = { workspace = 3 },
+	["org.whispersystems.signal-desktop"] = { workspace = 3 },
+	["net.whatsapp.WhatsApp"] = { workspace = 3 },
+	["com.spotify.client"] = { workspace = 4 },
+	["com.1password.1password"] = { workspace = 4, title = onepassword_main },
 }
 
-for bundle, workspace in pairs(app_workspaces) do
+for bundle, rule in pairs(app_workspaces) do
 	paneru.on("window_spawned", { bundle = bundle }, function(event, ws)
-		if ws:workspace_of(event.window_id) == workspace then
+		if rule.title and not event.title:find(rule.title) then
 			return
 		end
-		return ws:shift(event.window_id, workspace)
+		if ws:workspace_of(event.window_id) == rule.workspace then
+			return
+		end
+		return ws:shift(event.window_id, rule.workspace)
 	end)
 end
 
 -- 1Password: keep the main vault window tiled, float everything else the app
--- opens (Quick Access is "Quick Access — 1Password"; unlock and browser
--- authorisation prompts have similarly short titles). The main window is the
--- only one titled "<account> — <collection> — 1Password", so anything without
--- two separators floats. `ws:float` without a rect leaves the window where
--- 1Password put it.
+-- opens. `ws:float` without a rect leaves the window where 1Password put it.
 paneru.on("window_spawned", { bundle = "com.1password.1password" }, function(event, ws)
-	if event.title:find(" — .* — 1Password$") then
+	if event.title:find(onepassword_main) then
 		return
 	end
 	return ws:float(event.window_id)
 end)
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Bootstrap: put every open window of the apps above back on its workspace,
+-- make the `full_width` ones fill the screen. Focus and the visible workspace
+-- stay as they are. Windows already on the right workspace keep their place.
+-- Floating windows are left alone.
+--
+-- Bound to cmd-ctrl-shift-b. dotfiles/raycast/paneru-bootstrap.sh launches the
+-- apps first and then presses that chord, because `send-cmd` cannot call Lua.
+-- ─────────────────────────────────────────────────────────────────────────────
+
+local function bootstrap(ws)
+	for _, window in ipairs(ws:windows()) do
+		local rule = app_workspaces[window.bundle_id]
+		if rule and window.managed and not window.floating and (not rule.title or window.title:find(rule.title)) then
+			if ws:workspace_of(window.id) ~= rule.workspace then
+				ws = ws:shift(window.id, rule.workspace)
+			end
+			if rule.full_width then
+				ws = ws:width(window.id, 1.0)
+			end
+		end
+	end
+	return ws
+end
+
+paneru.bind("cmd + ctrl + shift - b", bootstrap)
 
 -- aerospace had a second ghostty rule that also ran `layout floating`, which
 -- makes *every* window on workspace 1 float. Left out on purpose; uncomment if
