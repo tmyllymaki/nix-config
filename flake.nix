@@ -26,7 +26,7 @@
 
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     brew-src = {
-      url = "github:Homebrew/brew/7.0.9";
+      url = "github:Homebrew/brew/7.0.11";
       flake = false;
     };
     zen-browser = {

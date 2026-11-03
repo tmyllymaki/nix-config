@@ -61,8 +61,8 @@
         # homebrew-core input; newer formulae then fail to parse. Track a
         # newer tag here (keep in sync with flake.nix) until upstream catches up.
         package = inputs.brew-src // {
-          name = "brew-7.0.9";
-          version = "7.0.9";
+          name = "brew-7.0.11";
+          version = "7.0.11";
         };
         taps = {
           "homebrew/homebrew-core" = inputs.homebrew-core;
