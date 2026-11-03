@@ -144,8 +144,8 @@ config.key_tables = {
 config.default_prog = { find_bin("fish") }
 config.send_composed_key_when_left_alt_is_pressed = true
 
-config.front_end = "WebGpu"
-config.webgpu_power_preference = "HighPerformance"
+-- WebGpu renders at 1x on Retina displays in the nix build, which makes text blurry.
+config.front_end = "OpenGL"
 config.max_fps = 120
 config.animation_fps = 120
 

@@ -139,7 +139,6 @@
             "tailscale-app"
             "visual-studio-code@insiders"
             "vivaldi"
-            "wezterm@nightly"
             "whatsapp"
             "zed"
           ]
