@@ -29,15 +29,19 @@ local has_zmx = io.open(find_bin("zmx")) ~= nil
 -- The file should `return` a table; every field is optional:
 --   issue_trackers  = { { prefix = "ABC", url = "https://example.atlassian.net" } }
 --   project_layouts = { ["project-dir-name"] = { { session = "nvim", cmd = "nvim" } } }
+--   font            = { family = "Inconsolata", stretch = "Condensed" }
 -- ~/.config/wezterm itself is a read-only symlink managed by nix, so the file
 -- lives next to it rather than inside it.
+local local_cfg_path = wezterm.home_dir .. "/.config/wezterm-local.lua"
 local local_cfg = {}
 do
-	local ok, result = pcall(dofile, wezterm.home_dir .. "/.config/wezterm-local.lua")
+	local ok, result = pcall(dofile, local_cfg_path)
 	if ok and type(result) == "table" then
 		local_cfg = result
 	end
 end
+-- Reload the config when the local file changes, not only when this one does.
+wezterm.add_to_config_reload_watch_list(local_cfg_path)
 
 config.set_environment_variables = {
 	PATH = "/run/wrappers/bin:/run/current-system/sw/bin:/opt/homebrew/bin:" .. os.getenv("PATH"),
@@ -68,17 +72,40 @@ config.colors = colors
 -- Light text on a dark background looks heavier, so dark mode uses lighter weights.
 local font_weights = appearance.is_dark() and { normal = "DemiLight", bold = "DemiBold" }
 	or { normal = "Regular", bold = "Bold" }
-config.font = wezterm.font(
-	"IoskeleyMonoTerm Nerd Font Mono",
-	{ weight = font_weights.normal, stretch = "SemiCondensed", style = "Normal" }
-)
-config.font_rules = {
-	{
-		intensity = "Bold",
-		font = wezterm.font("IoskeleyMonoTerm Nerd Font Mono", { weight = font_weights.bold, stretch = "SemiCondensed" }),
-	},
+-- Fonts offered by the picker (LEADER f). The first entry is the default
+-- unless the local file sets `font`. Names are as `wezterm ls-fonts --list-system` prints them.
+local font_choices = {
+	{ family = "IoskeleyMonoTerm Nerd Font Mono", stretch = "SemiCondensed" },
+	{ family = "IosevkaTerm Nerd Font Mono" },
+	{ family = "Inconsolata", stretch = "UltraCondensed" },
+	{ family = "Inconsolata", stretch = "ExtraCondensed" },
+	{ family = "Inconsolata", stretch = "Condensed" },
+	{ family = "Inconsolata", stretch = "SemiCondensed" },
+	{ family = "Inconsolata" },
+	{ family = "Sudo Var" },
+	{ family = "GeistMono Nerd Font Mono" },
+	{ family = "IntoneMono Nerd Font Mono" },
+	{ family = "Lilex Nerd Font Mono" },
+	{ family = "JetBrainsMono Nerd Font Mono" },
 }
--- config.font = wezterm.font("Iosevka Term SS03", { weight = "Medium" })
+
+local function font_label(choice)
+	return choice.stretch and (choice.family .. " " .. choice.stretch) or choice.family
+end
+
+-- Returns the `font` and `font_rules` config values for a font choice.
+local function font_settings(choice)
+	local stretch = choice.stretch or "Normal"
+	return wezterm.font(choice.family, { weight = font_weights.normal, stretch = stretch, style = "Normal" }),
+		{
+			{
+				intensity = "Bold",
+				font = wezterm.font(choice.family, { weight = font_weights.bold, stretch = stretch }),
+			},
+		}
+end
+
+config.font, config.font_rules = font_settings(local_cfg.font or font_choices[1])
 config.font_size = 16
 config.line_height = 1.0
 
@@ -563,6 +590,35 @@ config.keys = {
 		key = "p",
 		mods = "LEADER|CTRL",
 		action = wezterm.action_callback(zmx_session_picker),
+	},
+
+	-- Font picker: applies to this window until it closes or the config reloads.
+	-- To keep a font, set `font` in ~/.config/wezterm-local.lua.
+	{
+		key = "f",
+		mods = "LEADER",
+		action = wezterm.action_callback(function(window, pane)
+			local choices = {}
+			for i, choice in ipairs(font_choices) do
+				table.insert(choices, { id = tostring(i), label = font_label(choice) })
+			end
+			window:perform_action(
+				wezterm.action.InputSelector({
+					title = "Font",
+					choices = choices,
+					fuzzy = true,
+					action = wezterm.action_callback(function(inner_window, _, id, _)
+						if not id then
+							return
+						end
+						local overrides = inner_window:get_config_overrides() or {}
+						overrides.font, overrides.font_rules = font_settings(font_choices[tonumber(id)])
+						inner_window:set_config_overrides(overrides)
+					end),
+				}),
+				pane
+			)
+		end),
 	},
 
 	-- Scratch workspace: show it, or go back to where the toggle was pressed

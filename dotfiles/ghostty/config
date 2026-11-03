@@ -4,7 +4,10 @@ macos-non-native-fullscreen = visible-menu
 mouse-hide-while-typing = true
 
 # Empty values reset the configuration to the default value
+# font-family = "JetBrainsMono Nerd Font Mono"
 font-family = "IoskeleyMonoTerm Nerd Font Mono"
+# font-family = "Pragmasevka Nerd Font"
+# font-family = "Nordwand Mono"
 # font-family = "Monaspace Neon"
 # font-family-bold = "Monaspace Xenon"
 # font-family-italic = "Monaspace Neon"
