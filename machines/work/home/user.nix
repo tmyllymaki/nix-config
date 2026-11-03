@@ -38,6 +38,8 @@
         pkgs.pandoc
         pkgs.typst
         pkgs.duckdb
+        # Provides cargo/rustc; run `rustup default stable` once after switching.
+        pkgs.rustup
         # harlequin with the Databricks adapter (see packages/harlequin.nix);
         # plain pkgs.harlequin ships only the Postgres and BigQuery adapters.
         extras.mypkgs.harlequin
