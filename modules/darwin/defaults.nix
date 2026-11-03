@@ -33,6 +33,23 @@
           NewWindowTargetPath = "~/";
           WarnOnEmptyTrash = false;
         };
+        # Finner (installed in shell.nix) as the only keyboard layout. The ID
+        # comes from the <keyboard id> attribute in Finner.keylayout.
+        "com.apple.HIToolbox".AppleEnabledInputSources = [
+          {
+            InputSourceKind = "Keyboard Layout";
+            "KeyboardLayout ID" = -30432;
+            "KeyboardLayout Name" = "Finner";
+          }
+          {
+            InputSourceKind = "Non Keyboard Input Method";
+            "Bundle ID" = "com.apple.CharacterPaletteIM";
+          }
+          {
+            InputSourceKind = "Non Keyboard Input Method";
+            "Bundle ID" = "com.apple.PressAndHold";
+          }
+        ];
         "com.apple.WindowManager" = {
           StandardHideDesktopIcons = true;
           HideDesktop = true;
