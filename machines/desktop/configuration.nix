@@ -15,6 +15,7 @@
     system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
 
     custom.quickenable.system.modules = [
+      "audio"
       "base"
       "desktop"
       "gaming"
