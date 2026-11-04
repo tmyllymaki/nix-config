@@ -104,9 +104,18 @@
         # children (Qt QProcess, inherited env): export PYTHONPATH so those
         # children can import the package.
         makeWrapperArgs = [
-          "--prefix LD_LIBRARY_PATH : /run/opengl-driver/lib"
-          "--prefix PYTHONPATH : $out/${python.sitePackages}"
-          "--prefix PYTHONPATH : ${lib.makeSearchPath python.sitePackages deps}"
+          "--prefix"
+          "LD_LIBRARY_PATH"
+          ":"
+          "/run/opengl-driver/lib"
+          "--prefix"
+          "PYTHONPATH"
+          ":"
+          "${placeholder "out"}/${python.sitePackages}"
+          "--prefix"
+          "PYTHONPATH"
+          ":"
+          "${lib.makeSearchPath python.sitePackages deps}"
         ];
 
         meta = {
