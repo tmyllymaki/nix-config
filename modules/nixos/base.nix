@@ -96,6 +96,20 @@
       programs._1password-gui.polkitPolicyOwners = ["tm"];
       programs.command-not-found.enable = false;
 
+      # 1Password's BrowserSupport only recognises browsers at distro-standard
+      # paths (/usr/bin/vivaldi-bin etc). NixOS runs it from
+      # /nix/store/<hash>-vivaldi-*/opt/vivaldi/vivaldi-bin, which matches
+      # nothing, so native messaging dies with UnknownBrowser and the browser
+      # extension falls back to asking for the master password every time.
+      # Names here match the *process* name (`ps -o comm`), not the wrapper.
+      # mode 0755 is required: BrowserSupport refuses a non-executable file.
+      environment.etc."1password/custom_allowed_browsers" = {
+        mode = "0755";
+        text = ''
+          vivaldi-bin
+        '';
+      };
+
       environment.shells = [pkgs.fish];
       environment.systemPackages = with pkgs; [
         alejandra
