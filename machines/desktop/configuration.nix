@@ -16,15 +16,21 @@
 
     custom.quickenable.system.modules = [
       "base"
-      "cachyos"
       "desktop"
       "gaming"
       "hibernate"
+      "kernel"
       "keyd"
       "nfs"
       "plasma"
       "secureboot"
       "velocity-bridge"
     ];
+
+    # zen: desktop/gaming-tuned config from nixpkgs (full preempt, BFQ, HZ=1000,
+    # NTSYNC). Swapped in for the old nix-cachyos-kernel flake, whose attic cache
+    # was compromised. Alternatives: "default", "latest", "xanmod",
+    # "xanmod-latest" — see modules/nixos/kernel.nix.
+    custom.system.kernel.flavor = "zen";
   };
 }
