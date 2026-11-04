@@ -18,6 +18,19 @@
         dedicatedServer.openFirewall = true;
       };
 
+      services.sunshine = {
+        enable = true;
+        autoStart = true;
+        capSysAdmin = true;
+        openFirewall = true;
+      };
+
+      users.users.tm = {
+        extraGroups = ["uinput"];
+      };
+
+      hardware.uinput.enable = true;
+
       environment.systemPackages = with pkgs; [
         faugus-launcher
         mangohud
