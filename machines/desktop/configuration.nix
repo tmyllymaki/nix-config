@@ -25,6 +25,7 @@
       "nfs"
       "plasma"
       "secureboot"
+      "shadps4"
       "velocity-bridge"
     ];
 
