@@ -27,6 +27,10 @@
       directory = config.users.users.tm.home;
       clobberFiles = true;
 
+      # doom.nix symlinks ~/.config/doom/* at the repo checkout instead of the
+      # store; its default assumes the macOS layout (~/nix-darwin).
+      custom.home.doom.repoDir = "/etc/nixos";
+
       # yabridge + Wine so Windows VST3s (NeuralDSP etc.) load in REAPER.
       custom.home.guitar.windowsPlugins = true;
 
