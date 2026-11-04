@@ -29,11 +29,6 @@
       url = "github:Homebrew/brew/7.0.11";
       flake = false;
     };
-    zen-browser = {
-      url = "github:youwen5/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Homebrew taps
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
@@ -84,8 +79,6 @@
       flake = false;
     };
 
-    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
-
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v1.1.0";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -122,7 +115,6 @@
       _module.args.mkExtras = system: {
         neovim-nightly = inputs.neovim-nightly-overlay.packages.${system}.default;
         mypkgs = self.packages.${system};
-        zen-browser = lib.attrByPath [system "default"] null (inputs.zen-browser.packages or {});
       };
 
       perSystem = {system, ...}: {
