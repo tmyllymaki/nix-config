@@ -27,6 +27,9 @@
       directory = config.users.users.tm.home;
       clobberFiles = true;
 
+      # yabridge + Wine so Windows VST3s (NeuralDSP etc.) load in REAPER.
+      custom.home.guitar.windowsPlugins = true;
+
       custom.quickenable.hjem.modules = [
         "git"
         "ssh"
@@ -52,6 +55,7 @@
         "zellij"
         "mise"
         "doom"
+        "guitar"
       ];
     };
   };
