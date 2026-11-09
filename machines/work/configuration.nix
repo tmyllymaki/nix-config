@@ -12,17 +12,15 @@
     ];
 
     custom.system.homebrew.extraCasks = [
-      "arc"
       "firefox"
       "google-chrome"
       "microsoft-teams"
       "logi-options+"
       "linear"
-      "omniwm"
       "mikker/tap/dinky"
       "claude"
       "microsoft-excel"
-      "zen"
+      "kitty"
       "d12frosted/emacs-plus/emacs-plus-app"
     ];
 

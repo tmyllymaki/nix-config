@@ -12,19 +12,6 @@
       # Both Macs are Apple Silicon.
       nixpkgs.hostPlatform = "aarch64-darwin";
 
-      nixpkgs.overlays = [
-        (final: prev: {
-          mpv-unwrapped = prev.mpv-unwrapped.overrideAttrs (old: {
-            nativeBuildInputs = old.nativeBuildInputs ++ [final.llvmPackages.lld];
-            preConfigure =
-              (old.preConfigure or "")
-              + ''
-                export LDFLAGS="-fuse-ld=lld $LDFLAGS"
-              '';
-          });
-        })
-      ];
-
       system.stateVersion = 6;
       system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
 
@@ -60,10 +47,12 @@
         # nix-homebrew pins brew to a release tag that lags the unpinned
         # homebrew-core input; newer formulae then fail to parse. Track a
         # newer tag here (keep in sync with flake.nix) until upstream catches up.
-        package = inputs.brew-src // {
-          name = "brew-7.0.11";
-          version = "7.0.11";
-        };
+        package =
+          inputs.brew-src
+          // {
+            name = "brew-7.0.11";
+            version = "7.0.11";
+          };
         taps = {
           "homebrew/homebrew-core" = inputs.homebrew-core;
           "homebrew/homebrew-cask" = inputs.homebrew-cask;

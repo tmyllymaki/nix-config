@@ -8,9 +8,17 @@
       extraBrews = [
         "qmk/qmk/qmk"
         "swiftlint"
+        "exercism"
+        "elixir"
+        "portaudio"
+        "sketchybar"
       ];
       # Apple's container CLI ships as a cask here; work uses the formula.
-      extraCasks = ["container"];
+      extraCasks = [
+        "container"
+        "zed"
+        "plex"
+      ];
     };
 
     # Enable system modules

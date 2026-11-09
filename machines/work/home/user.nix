@@ -23,7 +23,6 @@
         "doom"
         "aerospace"
         "dinky"
-        "flashspace"
         "sketchybar"
         "atuin"
         "mise"
