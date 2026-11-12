@@ -12,6 +12,17 @@
       # Both Macs are Apple Silicon.
       nixpkgs.hostPlatform = "aarch64-darwin";
 
+      # fnm 1.39.0's zstd-sys build script probes libzstd via pkg-config, but
+      # the nixpkgs derivation provides neither. Drop once fixed upstream.
+      nixpkgs.overlays = [
+        (final: prev: {
+          fnm = prev.fnm.overrideAttrs (old: {
+            nativeBuildInputs = (old.nativeBuildInputs or []) ++ [final.pkg-config];
+            buildInputs = (old.buildInputs or []) ++ [final.zstd];
+          });
+        })
+      ];
+
       system.stateVersion = 6;
       system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
 
