@@ -22,8 +22,10 @@ paneru.setup({
 		-- Exponential ease-out decay rate for the strip/window movement and
 		-- resizes: t = 1 - e^(-rate*dt). UNSET means 1_000_000, i.e. an instant
 		-- snap with no animation -- that's the jarring jump. Suggested 8-20 for a
-		-- fluid feel; higher = snappier.
-		animation_speed = 60.0,
+		-- fluid feel; higher = snappier. Above ~20 the slide stutters: paneru
+		-- caps the first frame after idle at 1/30 s, so at 60 that one frame
+		-- covers 86% of the distance and the rest is a few-pixel crawl.
+		animation_speed = 20.0,
 
 		-- Virtual workspace (row) switches stay instant, matching the upstream
 		-- default -- no slow vertical slide on top of the horizontal strip
