@@ -90,6 +90,11 @@
     llm-agents.url = "github:numtide/llm-agents.nix";
 
     ts3-noweb.url = "github:Jokler/ts3client-noweb-nix";
+
+    bootvine = {
+      url = "git+https://codeberg.org/wvhulle/bootvine";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {

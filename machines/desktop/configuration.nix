@@ -17,6 +17,7 @@
     custom.quickenable.system.modules = [
       "audio"
       "base"
+      "bootvine"
       "desktop"
       "gaming"
       "hibernate"
