@@ -99,10 +99,6 @@ bind("window focus south", "alt + shift + cmd + ctrl - j", "alt + shift + cmd + 
 -- cmd-arrows also move focus. NOTE: these shadow cmd-left/right (start/end of
 -- line in text fields) in every app. cmd-hjkl is deliberately left unbound so
 -- cmd-l (address bar) and cmd-j/k keep working in apps.
-bind("window focus west", "cmd - leftarrow")
-bind("window focus east", "cmd - rightarrow")
-bind("window focus north", "cmd - uparrow")
-bind("window focus south", "cmd - downarrow")
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- Moving windows
@@ -162,10 +158,6 @@ paneru.bind("cmd + shift - rightarrow", smart_move("east"))
 -- Vertical cmd-shift moves reorder the window inside its stack (top <-> bottom),
 -- pairing with the horizontal smart moves below. Workspaces are only reached
 -- via cmd-N; moving a window to another row stays on alt-shift-j/k.
-bind("window swap north", "cmd + shift - k", "cmd + shift - uparrow")
-bind("window swap south", "cmd + shift - j", "cmd + shift - downarrow")
-bind("window virtualmove north", "cmd + shift - k")
-bind("window virtualmove south", "cmd + shift - j")
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- Workspaces (paneru virtual workspaces = rows, 1-7)
