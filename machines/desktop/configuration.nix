@@ -27,6 +27,7 @@
       "plasma"
       "secureboot"
       "shadps4"
+      "sunshine"
       "velocity-bridge"
     ];
 
