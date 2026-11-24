@@ -21,7 +21,7 @@
       "claude"
       "microsoft-excel"
       "kitty"
-      "d12frosted/emacs-plus/emacs-plus-app"
+      # "d12frosted/emacs-plus/emacs-plus-app"
     ];
 
     # Enable system modules
