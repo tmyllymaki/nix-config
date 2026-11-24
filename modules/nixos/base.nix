@@ -9,6 +9,17 @@
     options.custom.system.base.enable = lib.mkEnableOption "system.base";
 
     config = lib.mkIf config.custom.system.base.enable {
+      # fnm 1.39.0's zstd-sys build script probes libzstd via pkg-config, but
+      # the nixpkgs derivation provides neither. Drop once fixed upstream.
+      nixpkgs.overlays = [
+        (final: prev: {
+          fnm = prev.fnm.overrideAttrs (old: {
+            nativeBuildInputs = (old.nativeBuildInputs or []) ++ [final.pkg-config];
+            buildInputs = (old.buildInputs or []) ++ [final.zstd];
+          });
+        })
+      ];
+
       nix = {
         optimise.automatic = true;
         nixPath = ["nixpkgs=${inputs.nixpkgs}"];

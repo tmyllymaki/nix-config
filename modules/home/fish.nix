@@ -89,6 +89,7 @@
         "fish/themes/modus_operandi.fish" = mkSource "themes/modus_operandi.fish";
         "fish/themes/modus_vivendi.fish" = mkSource "themes/modus_vivendi.fish";
         "fish/themes/tokyonight_moon.fish" = mkSource "themes/tokyonight_moon.fish";
+        "fish/themes/mitchell.fish" = mkSource "themes/mitchell.fish";
       };
 
       files = {

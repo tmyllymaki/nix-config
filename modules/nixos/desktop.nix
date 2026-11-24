@@ -76,29 +76,10 @@
 
       environment.systemPackages =
         [
-          inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
-          pkgs.quickshell
+          # inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+          # pkgs.quickshell
           pkgs.spotify
           pkgs.vivaldi
-          (pkgs.symlinkJoin {
-            name = "vivaldi";
-            paths = [pkgs.vivaldi];
-            buildInputs = [pkgs.makeWrapper];
-            postBuild = ''
-              wrapProgram $out/bin/vivaldi \
-                --add-flags "--enable-blink-features=MiddleClickAutoscroll"
-              for f in $out/share/applications/*.desktop; do
-                if [ -L "$f" ]; then
-                  target=$(readlink "$f")
-                  rm "$f"
-                  cp "$target" "$f"
-                  chmod +w "$f"
-                fi
-                substituteInPlace "$f" \
-                  --replace-fail "${pkgs.vivaldi}/bin/vivaldi" "$out/bin/vivaldi"
-              done
-            '';
-          })
         ]
         ++ (with pkgs; [
           swaylock
