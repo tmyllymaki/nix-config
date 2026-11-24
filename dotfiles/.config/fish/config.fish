@@ -196,6 +196,10 @@ function sandbox-custom-gemini
     ~/.config/sandbox-exec/run-sandboxed.sh gemini --yolo $argv
 end
 
+if set -q REX_BIN_DIR
+    fish_add_path --path --prepend --move $REX_BIN_DIR
+end
+
 # Added by OrbStack: command-line tools and integration
 # This won't be added again if you remove it.
 source ~/.orbstack/shell/init2.fish 2>/dev/null || :
