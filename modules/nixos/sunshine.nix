@@ -59,8 +59,12 @@
 
       services.sunshine = {
         enable = true;
+        # Without CUDA, Sunshine cannot load libcuda for NVENC and falls back to
+        # Vulkan encoding, which flickers on this NVIDIA card.
+        package = pkgs.sunshine.override {cudaSupport = true;};
         autoStart = true;
-        capSysAdmin = true;
+        # CAP_SYS_ADMIN is only needed for kms capture.
+        capSysAdmin = false;
         openFirewall = true;
 
         settings = {
