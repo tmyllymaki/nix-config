@@ -25,6 +25,7 @@
       "keyd"
       "nfs"
       "plasma"
+      "rex"
       "secureboot"
       "shadps4"
       "sunshine"
