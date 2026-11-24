@@ -74,21 +74,6 @@
           PATH = lib.mkForce "/run/current-system/sw/bin:${pkgs.coreutils}/bin:${pkgs.findutils}/bin:${pkgs.gnugrep}/bin:${pkgs.gnused}/bin:${pkgs.systemd}/bin:${pkgs.procps}/bin:${pkgs.glibc.bin}/bin";
         };
       };
-
-      # Kill Battle.net sockets on network reconnect to force re-auth
-      networking.networkmanager.dispatcherScripts = [
-        {
-          source = pkgs.writeShellScript "99-bnet-socket-fix" ''
-            if [ "$2" = "up" ]; then
-                sleep 2
-                ${pkgs.iproute2}/bin/ss -K dport = :1119
-                ${pkgs.iproute2}/bin/ss -K dport = :443
-                ${pkgs.iproute2}/bin/ss -K dport = :5222
-                ${pkgs.procps}/bin/pkill -9 -f "Agent.exe"
-            fi
-          '';
-        }
-      ];
     };
   };
 }
